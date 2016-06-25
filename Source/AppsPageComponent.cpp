@@ -41,12 +41,23 @@ AppListComponent::AppListComponent() :
 {
   addChildComponent(nextPageBtn);
   addChildComponent(prevPageBtn);
-  nextPageBtn->addListener(this);
-  prevPageBtn->addListener(this);
+  MyListener* list = new MyListener(nextPageBtn, this);
+  nextPageBtn->addListener(list);
+  prevPageBtn->addListener(list);
   
   addAndMakeVisible(grid);
 }
 AppListComponent::~AppListComponent() {}
+
+void AppListComponent::next(){
+    grid->showNextPage();
+    checkShowPageNav();
+}
+
+void AppListComponent::previous(){
+    grid->showPrevPage();
+    checkShowPageNav();
+}
 
 DrawableButton *AppListComponent::createAndOwnIcon(const String &name, const String &iconPath, const String &shell) {
   auto image = createImageFromFile(assetFile(iconPath));
@@ -256,7 +267,8 @@ void AppsPageComponent::buttonStateChanged(Button* btn) {
   }
   // set UI back to default if we can see the popup, but aren't holding the button down
   else if (btn->isVisible()) {
-    appIcon->setVisible(true);
+    btn->setVisible(true);
+    //appIcon->setVisible(true);
     appBtn->setColour(DrawableButton::textColourId, getLookAndFeel().findColour(DrawableButton::textColourId));
     buttonPopup->setVisible(false);
   }
@@ -278,4 +290,11 @@ void AppsPageComponent::buttonClicked(Button *button) {
     auto appButton = (AppIconButton*)button;
     startOrFocusApp(appButton);
   }
+}
+
+MyListener::MyListener(Button* next, AppListComponent* p): next(next), page(p){}
+
+void MyListener::buttonClicked(Button *button){
+    if(button==next) page->next();
+    else page->previous();
 }
