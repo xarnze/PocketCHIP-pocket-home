@@ -47,6 +47,9 @@ public:
   void resized() override;
   void checkShowPageNav();
   
+  void next();
+  void previous();
+  
   void addAndOwnIcon(const String &name, Component *icon);
   DrawableButton *createAndOwnIcon(const String &name, const String &iconPath, const String &shell);
   virtual Array<DrawableButton *> createIconsFromJsonArray(const var &json);
@@ -93,4 +96,14 @@ private:
   void openAppsLibrary();
   
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AppsPageComponent)
+};
+
+class NavigationListener : public Button::Listener {
+public:
+    NavigationListener(Button*, AppListComponent*);
+    void buttonClicked(Button *button) override;
+
+private:
+    Button* next;
+    AppListComponent* page;
 };

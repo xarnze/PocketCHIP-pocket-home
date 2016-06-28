@@ -10,7 +10,7 @@ PageStackComponent::~PageStackComponent() {}
 void PageStackComponent::paint(Graphics &g) {}
 
 void PageStackComponent::resized() {
-  if (!stack.empty()) {
+  if (!stack.isEmpty()) {
     stack.getLast()->setBounds(getBounds());
   }
 }
@@ -21,7 +21,7 @@ int PageStackComponent::getDepth() const {
 
 void PageStackComponent::pushPage(Component *page, Transition transition) {
   auto bounds = getLocalBounds();
-  if (!stack.empty()) {
+  if (!stack.isEmpty()) {
     transitionOut(stack.getLast(), transition, transitionDurationMillis);
   }
   stack.add(page);
@@ -29,7 +29,7 @@ void PageStackComponent::pushPage(Component *page, Transition transition) {
 }
 
 void PageStackComponent::swapPage(Component *page, Transition transition) {
-  if (!stack.empty()) {
+  if (!stack.isEmpty()) {
     transitionOut(stack.getLast(), transition, transitionDurationMillis);
     stack.removeLast();
   }
@@ -38,10 +38,10 @@ void PageStackComponent::swapPage(Component *page, Transition transition) {
 }
 
 void PageStackComponent::popPage(Transition transition) {
-  if (!stack.empty()) {
+  if (!stack.isEmpty()) {
     transitionOut(stack.getLast(), transition, transitionDurationMillis, true);
     stack.removeLast();
-    if (!stack.empty()) {
+    if (!stack.isEmpty()) {
       transitionIn(stack.getLast(), transition, transitionDurationMillis, true);
     }
   }
@@ -56,7 +56,7 @@ void PageStackComponent::removePage(int idx) {
 }
 
 void PageStackComponent::clear(Transition transition) {
-  if (!stack.empty()) {
+  if (!stack.isEmpty()) {
     transitionOut(stack.getLast(), transition, transitionDurationMillis, true);
   }
   stack.clear();

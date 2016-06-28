@@ -41,12 +41,23 @@ AppListComponent::AppListComponent() :
 {
   addChildComponent(nextPageBtn);
   addChildComponent(prevPageBtn);
-  nextPageBtn->addListener(this);
-  prevPageBtn->addListener(this);
+  NavigationListener* list = new NavigationListener(nextPageBtn, this);
+  nextPageBtn->addListener(list);
+  prevPageBtn->addListener(list);
   
   addAndMakeVisible(grid);
 }
 AppListComponent::~AppListComponent() {}
+
+void AppListComponent::next(){
+    grid->showNextPage();
+    checkShowPageNav();
+}
+
+void AppListComponent::previous(){
+    grid->showPrevPage();
+    checkShowPageNav();
+}
 
 DrawableButton *AppListComponent::createAndOwnIcon(const String &name, const String &iconPath, const String &shell) {
   auto image = createImageFromFile(assetFile(iconPath));
@@ -278,4 +289,11 @@ void AppsPageComponent::buttonClicked(Button *button) {
     auto appButton = (AppIconButton*)button;
     startOrFocusApp(appButton);
   }
+}
+
+NavigationListener::NavigationListener(Button* next, AppListComponent* p): next(next), page(p){}
+
+void NavigationListener::buttonClicked(Button *button){
+    if(button==next) page->next();
+    else page->previous();
 }
