@@ -48,6 +48,8 @@ public:
     Array<Image> batteryIconImages;
     Array<Image> batteryIconChargingImages;
     Array<Image> wifiIconImages;
+    
+    ScopedPointer<Label> batteryLabel;
   
     LaunchSpinnerTimer launchSpinnerTimer;
     BatteryIconTimer batteryIconTimer;

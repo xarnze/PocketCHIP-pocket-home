@@ -46,6 +46,11 @@ void BatteryIconTimer::timerCallback() {
       Image batteryImg = batteryIcons[3];
       if (button->getName() == "Battery") {
           int status = round( ((float)batteryStatus.percentage)/100.0f * 3.0f );
+          
+          int pct = (int) batteryStatus.percentage;
+          juce::String pct_s = std::to_string(pct)+" %";
+          launcherComponent->batteryLabel->setText(pct_s, dontSendNotification);
+          
           if( batteryStatus.percentage <= 5 ) {
               status = 3;
           } else {
@@ -112,6 +117,11 @@ void WifiIconTimer::timerCallback() {
 
 LauncherComponent::LauncherComponent(const var &configJson)
 {
+  /* Battery percentage label */
+  batteryLabel = new Label("percentage", "-%");  
+  addAndMakeVisible(batteryLabel);
+  batteryLabel->setFont(Font(15.f));
+  
   bgColor = Colour(0x000000);
   bgImage = createImageFromFile(assetFile("mainBackground.png"));
   pageStack = new PageStackComponent();
@@ -255,7 +265,8 @@ void LauncherComponent::resized() {
   pageStack->setBounds(bounds.getX() + barSize, bounds.getY(), bounds.getWidth() - 2*barSize,
                        bounds.getHeight());
   launchSpinner->setBounds(0, 0, bounds.getWidth(), bounds.getHeight());
-
+  
+  batteryLabel->setBounds(bounds.getX()+40, bounds.getY(), 50, 50);
   // init
   if (!resize) {
     resize = true;
