@@ -286,8 +286,13 @@ void AppsPageComponent::buttonClicked(Button *button) {
     openAppsLibrary();
   }
   else {
-    auto appButton = (AppIconButton*)button;
-    startOrFocusApp(appButton);
+    if(launcherComponent->modeButton->getToggleState()){
+      //Delete mode
+    } else {
+      //Normal mode
+      auto appButton = (AppIconButton*)button;
+      startOrFocusApp(appButton);
+    }
   }
 }
 

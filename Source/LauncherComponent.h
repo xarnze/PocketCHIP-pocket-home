@@ -5,6 +5,8 @@
 #include "LauncherBarComponent.h"
 #include "PageStackComponent.h"
 #include "BatteryMonitor.h"
+#include "SwitchComponent.h"
+#include <sstream>
 
 class LauncherComponent;
 class LibraryPageComponent;
@@ -50,6 +52,8 @@ public:
     Array<Image> wifiIconImages;
     
     ScopedPointer<Label> batteryLabel;
+    ScopedPointer<Label> modeLabel;
+    ScopedPointer<SwitchComponent> modeButton;
   
     LaunchSpinnerTimer launchSpinnerTimer;
     BatteryIconTimer batteryIconTimer;
@@ -79,6 +83,7 @@ public:
 private:
     Colour bgColor;
     Image bgImage;
+    bool hasImg;
   
     void buttonClicked(Button *) override;
     

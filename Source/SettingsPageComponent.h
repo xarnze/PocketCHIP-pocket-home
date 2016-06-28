@@ -102,14 +102,22 @@ private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BluetoothCategoryItemComponent)
 };
 
+class PersonalizePageComponent;
+
 class SettingsPageComponent : public Component, private Button::Listener {
 public:
   ScopedPointer<IconSliderComponent> screenBrightnessSlider, volumeSlider;
   ScopedPointer<ImageButton> backButton;
   ScopedPointer<Component> mainPage;
   ScopedPointer<WifiCategoryItemComponent> wifiCategoryItem;
-
+  
+  /* Personalization */
+  ScopedPointer<TextButton> persoButton;
+  ScopedPointer<PersonalizePageComponent> persoPage;
+  /*******************/
+  
   ScopedPointer<SettingsPageWifiComponent> wifiPage;
+  
 
   StretchableLayoutManager verticalLayout;
 
@@ -139,5 +147,51 @@ private:
   ChildProcess child;
   unsigned int brightness;
   unsigned int volume;
+};
+
+/* Adding personnalization page */
+class PersonalizePageComponent : public Component, private Button::Listener, private ComboBox::Listener {
+public:
+  PersonalizePageComponent();
+  ~PersonalizePageComponent();
+  
+  void paint(Graphics &g) override;
+  void resized() override;
+  void buttonClicked(Button*) override;
+  void comboBoxChanged(ComboBox*) override;
+  void showAddComponents(bool);
+  void resetApplySuccess();
+  
+private:
+  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PersonalizePageComponent)
+  void updateFile(bool);
+  bool updateJSON();
+  
+  ScopedPointer<ImageButton> backButton;
+  Colour bgColor;
+  Image bgImage;
+  File config;
+  var json;
+  
+  /* Labels for inputs */
+  Label background;
+  Label icons;
+  
+  /* Labels to show before the inputs */
+  Label opt_back;
+  Label opt_name;
+  Label opt_img;
+  Label opt_shell;
+  Label success;
+  
+  /* Inputs */
+  ComboBox choose_back;
+  TextButton add_btn;
+  
+  TextButton apply;
+  TextEditor edit_back;
+  TextEditor edit_name;
+  TextEditor edit_icn;
+  TextEditor edit_shell;
 };
 
