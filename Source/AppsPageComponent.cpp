@@ -41,7 +41,7 @@ AppListComponent::AppListComponent() :
 {
   addChildComponent(nextPageBtn);
   addChildComponent(prevPageBtn);
-  MyListener* list = new MyListener(nextPageBtn, this);
+  NavigationListener* list = new NavigationListener(nextPageBtn, this);
   nextPageBtn->addListener(list);
   prevPageBtn->addListener(list);
   
@@ -291,9 +291,9 @@ void AppsPageComponent::buttonClicked(Button *button) {
   }
 }
 
-MyListener::MyListener(Button* next, AppListComponent* p): next(next), page(p){}
+NavigationListener::NavigationListener(Button* next, AppListComponent* p): next(next), page(p){}
 
-void MyListener::buttonClicked(Button *button){
+void NavigationListener::buttonClicked(Button *button){
     if(button==next) page->next();
     else page->previous();
 }

@@ -98,9 +98,9 @@ private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AppsPageComponent)
 };
 
-class MyListener : public Button::Listener {
+class NavigationListener : public Button::Listener {
 public:
-    MyListener(Button*, AppListComponent*);
+    NavigationListener(Button*, AppListComponent*);
     void buttonClicked(Button *button) override;
 
 private:
