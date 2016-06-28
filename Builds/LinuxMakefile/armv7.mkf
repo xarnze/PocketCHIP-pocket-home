@@ -15,7 +15,7 @@ ifeq ($(CONFIG),Debug)
   OUTDIR := ../../build/Debug
 
   ifeq ($(TARGET_ARCH),)
-    TARGET_ARCH := #-march=armv7
+    TARGET_ARCH := -march=armv7
   endif
 
   CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D "JUCER_LINUX_MAKE_6D53C8B4=1" -D "JUCE_APP_VERSION=0.0.1" -D "JUCE_APP_VERSION_HEX=0x1" -D "JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED" -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode -I ../../deps/JUCE/modules -I /usr/include/NetworkManager -I /usr/include/libnm-glib -I /usr/include/glib-2.0 -I /usr/lib/arm-linux-gnueabihf/glib-2.0/include/ -I /usr/include/dbus-1.0/
