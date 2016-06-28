@@ -267,8 +267,7 @@ void AppsPageComponent::buttonStateChanged(Button* btn) {
   }
   // set UI back to default if we can see the popup, but aren't holding the button down
   else if (btn->isVisible()) {
-    btn->setVisible(true);
-    //appIcon->setVisible(true);
+    appIcon->setVisible(true);
     appBtn->setColour(DrawableButton::textColourId, getLookAndFeel().findColour(DrawableButton::textColourId));
     buttonPopup->setVisible(false);
   }
