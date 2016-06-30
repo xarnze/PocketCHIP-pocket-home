@@ -1,6 +1,5 @@
 export CONFIG:=Release
 
-
 PKG_CONFIG:=$(shell which pkg-config)
 
 PKG_CONFIG_PACKAGES = \
