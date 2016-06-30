@@ -114,6 +114,7 @@ public:
   /* Personalization */
   ScopedPointer<TextButton> persoButton;
   ScopedPointer<PersonalizePageComponent> persoPage;
+  void deleteIcon(String, String);
   /*******************/
   
   ScopedPointer<SettingsPageWifiComponent> wifiPage;
@@ -161,6 +162,7 @@ public:
   void comboBoxChanged(ComboBox*) override;
   void showAddComponents(bool);
   void resetApplySuccess();
+  void deleteIcon(String, String);
   
 private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PersonalizePageComponent)

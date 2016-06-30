@@ -292,6 +292,10 @@ SettingsPageComponent::SettingsPageComponent() {
 
 SettingsPageComponent::~SettingsPageComponent() {}
 
+void SettingsPageComponent::deleteIcon(String name, String shell){
+  persoPage->deleteIcon(name,shell);
+}
+
 void SettingsPageComponent::paint(Graphics &g) {
     auto bounds = getLocalBounds();
     g.fillAll(bgColor);
@@ -590,4 +594,22 @@ void PersonalizePageComponent::resetApplySuccess(){
   edit_icn.setText("");
   edit_shell.setText("");
   apply.setVisible(true);
+}
+
+void PersonalizePageComponent::deleteIcon(String name, String shell){
+  Array<var>* pages_arr = (json["pages"].getArray());
+  const var& pages = ((*pages_arr)[0]);
+  Array<var>* items_arr = pages["items"].getArray();
+  
+  //Searching for the element in the Array
+  for(int i = 0; i < items_arr->size(); i++){
+    const var& elt = (*items_arr)[i];
+    if(elt["name"] == name && elt["shell"] == shell){
+      items_arr->remove(i);
+      break;
+    }
+  }
+  /*False because we don't want to change the icons in the persoPage
+    as it's even not shown */
+  updateFile(false);
 }

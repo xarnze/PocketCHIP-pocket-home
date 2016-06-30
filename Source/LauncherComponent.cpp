@@ -344,3 +344,8 @@ void LauncherComponent::buttonClicked(Button *button) {
     }
   }
 }
+
+void LauncherComponent::deleteIcon(String name, String shell){
+  SettingsPageComponent* system = (SettingsPageComponent*) pagesByName["Settings"];
+  system->deleteIcon(name,shell);
+}

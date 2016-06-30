@@ -79,6 +79,8 @@ public:
     void showAppsLibrary();
     void showLaunchSpinner();
     void hideLaunchSpinner();
+
+    void deleteIcon(String,String);
   
 private:
     Colour bgColor;
