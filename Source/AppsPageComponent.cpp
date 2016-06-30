@@ -288,6 +288,16 @@ void AppsPageComponent::buttonClicked(Button *button) {
   else {
     if(launcherComponent->modeButton->getToggleState()){
       //Delete mode
+      bool answer = AlertWindow::showOkCancelBox(AlertWindow::AlertIconType::WarningIcon,
+                                   "Delete icon ?", 
+                                   "Are you sure you want to delete "+button->getName()+" ?",
+                                   "Yes",
+                                   "No"
+                                  );
+        if(answer){
+            auto appButton = (AppIconButton*) button;
+            launcherComponent->deleteIcon(button->getName(), appButton->shell);
+        }
     } else {
       //Normal mode
       auto appButton = (AppIconButton*)button;

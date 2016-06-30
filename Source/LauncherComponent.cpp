@@ -116,11 +116,14 @@ void WifiIconTimer::timerCallback() {
 }
 
 LauncherComponent::LauncherComponent(const var &configJson)
-{
+{    
   /* Battery percentage label */
-  batteryLabel = new Label("percentage", "-%");  
+  batteryLabel = new Label("percentage", "-%");
   addAndMakeVisible(batteryLabel);
   batteryLabel->setFont(Font(15.f));
+//   batteryLabel->setOpaque(false);
+//   batteryLabel->setAlwaysOnTop(true);
+//   batteryLabel->addToDesktop(ComponentPeer::StyleFlags::windowIsSemiTransparent);
   
   String value = (configJson["background"]).toString();
   
@@ -131,7 +134,6 @@ LauncherComponent::LauncherComponent(const var &configJson)
     std::stringstream ss;
     ss << std::hex << value;
     ss >> x;
-    printf("X = %x\n", x);
     bgColor = Colour(x);
     hasImg = false;
   }
@@ -266,8 +268,8 @@ LauncherComponent::LauncherComponent(const var &configJson)
   modeButton->setName("Switch");
   modeButton->addListener(this);
   modeLabel = new Label("mode", "Normal mode");
-  /*addAndMakeVisible(modeLabel);
-  addAndMakeVisible(modeButton);*/
+  addAndMakeVisible(modeLabel);
+  addAndMakeVisible(modeButton);
 }
 
 LauncherComponent::~LauncherComponent() {
@@ -295,8 +297,8 @@ void LauncherComponent::resized() {
   
   batteryLabel->setBounds(bounds.getX()+40, bounds.getY(), 50, 50);
   
-//   modeLabel->setBounds(bounds.getX()+320, bounds.getY(), 100, 50);
-//   modeButton->setBounds(bounds.getX()+395, bounds.getY()+16, 40, 20);
+   modeLabel->setBounds(bounds.getX()+320, bounds.getY(), 100, 50);
+   modeButton->setBounds(bounds.getX()+395, bounds.getY()+16, 40, 20);
   // init
   if (!resize) {
     resize = true;
