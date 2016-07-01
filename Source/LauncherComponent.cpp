@@ -124,6 +124,15 @@ LauncherComponent::LauncherComponent(const var &configJson)
 //   batteryLabel->setOpaque(false);
 //   batteryLabel->setAlwaysOnTop(true);
 //   batteryLabel->addToDesktop(ComponentPeer::StyleFlags::windowIsSemiTransparent);
+
+  /* Normal/Delete mode */
+  modeButton = new SwitchComponent;
+  modeButton->setName("Switch");
+  modeButton->addListener(this);
+  modeButton->setAlwaysOnTop(true);
+  modeLabel = new Label("mode", "Normal mode");
+  addAndMakeVisible(modeLabel);
+  addAndMakeVisible(modeButton);
   
   String value = (configJson["background"]).toString();
   
@@ -262,14 +271,6 @@ LauncherComponent::LauncherComponent(const var &configJson)
   wifiIconTimer.launcherComponent = this;
   wifiIconTimer.startTimer(2000);
   wifiIconTimer.timerCallback();
-  
-  /* Normal/Delete mode */
-  modeButton = new SwitchComponent;
-  modeButton->setName("Switch");
-  modeButton->addListener(this);
-  modeLabel = new Label("mode", "Normal mode");
-  addAndMakeVisible(modeLabel);
-  addAndMakeVisible(modeButton);
 }
 
 LauncherComponent::~LauncherComponent() {

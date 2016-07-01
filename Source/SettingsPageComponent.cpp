@@ -540,10 +540,17 @@ void PersonalizePageComponent::comboBoxChanged(ComboBox* box){
 void PersonalizePageComponent::updateFile(bool ok){
   DynamicObject* obj = json.getDynamicObject();
   String s = JSON::toString(json);
-  config.replaceWithText(s);
-  if(ok){
+  bool write = config.replaceWithText(s);
+  if(write && ok){
     apply.setVisible(false);
     success.setVisible(true);
+  }
+  else if(!write){
+    String message = "Error writing the configuration into the file\nCheck the permissions";
+    AlertWindow::showMessageBox(
+            AlertWindow::AlertIconType::WarningIcon,
+            "Error",
+            message);
   }
 }
 
