@@ -396,7 +396,7 @@ PersonalizePageComponent::PersonalizePageComponent():
 background("lab_back","Background"), icons("lab_icons","Icons management"), opt_back("opt_back",""),
 opt_name("opt_name", "Name:"), opt_img("opt_img", "Icon path:"), opt_shell("opt_shell", "Command:"),
 add_btn("Add"), apply("Apply"), choose_back("back_box"), edit_back("back_field"),
-edit_name("name"), edit_icn("icn"), edit_shell("shell"), config(assetFile("config.json")),
+edit_name("name"), edit_icn("icn"), edit_shell("shell"), config(assetConfigFile("config.json")),
 json(JSON::parse(config)), success("suc", "Success !")
 {
   bgColor = Colour(0xffd23c6d);

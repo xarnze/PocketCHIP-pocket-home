@@ -4,6 +4,7 @@
 
 File absoluteFileFromPath(const String &path);
 File assetFile(const String &path);
+File assetConfigFile(const String &fileName);
 
 Image createImageFromFile(const File &imageFile);
 ImageButton *createImageButton(const String &name, const File &imageFile);

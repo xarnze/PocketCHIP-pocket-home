@@ -3,7 +3,15 @@
 File absoluteFileFromPath(const String &path) {
   return File::isAbsolutePath(path) ? File(path)
                                     : File::getCurrentWorkingDirectory().getChildFile(path);
+
 }
+
+//Function to create or load the writable config file
+File assetConfigFile(const String &fileName) {
+  File linuxAssetFile = absoluteFileFromPath("~/.pocket-home/" + fileName);
+  return linuxAssetFile;
+}
+
 
 // TODO: allow user overrides of asset files
 File assetFile(const String &fileName) {

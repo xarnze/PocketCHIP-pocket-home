@@ -147,16 +147,35 @@ void PokeLaunchApplication::initialise(const String &commandLine) {
     quit();
   }
 
-  auto configFile = assetFile("config.json");
+  auto configFile = assetConfigFile("config.json");
   if (!configFile.exists()) {
-    std::cerr << "Missing config file: " << configFile.getFullPathName() << std::endl;
-    quit();
+    File folder("~/.pocket-home");
+    folder.createDirectory();
+    configFile.create();
+    if(!configFile.setReadOnly(false))
+      std::cerr << "Problem creating the config file !" << std::endl;
+    File configOriginal = assetFile("config.json");
+    String content = configOriginal.loadFileAsString();
+    configFile.replaceWithText(content);
+  /*    std::cerr << "Missing config file: " << configFile.getFullPathName() << std::endl;
+    quit();*/
   }
 
   auto configJson = JSON::parse(configFile);
   if (!configJson) {
-    std::cerr << "Could not parse config file: " << configFile.getFullPathName() << std::endl;
-    quit();
+    bool launch = AlertWindow::showOkCancelBox(AlertWindow::AlertIconType::WarningIcon,
+	"Cannot launch Pocket-Home",
+	"There was an error parsing the configuration file (due to a syntax error)\n \
+	Do you want to launch a terminal now to correct the file ?",
+	"Yes",
+	"No");
+    if(launch){
+     execlp("vala-terminal", "vala-terminal", "-fs", "8", "-g", "20", "20", 0); 
+    }
+    else{
+      std::cerr << "Could not parse config file: " << configFile.getFullPathName() << std::endl;
+      quit();
+    }
   }
 
   // open sound handle
