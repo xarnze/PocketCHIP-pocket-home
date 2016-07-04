@@ -21,14 +21,18 @@ public:
 
   StretchableLayoutManager verticalLayout;
     
+    ScopedPointer<TextButton> updateButton;
     ScopedPointer<ImageButton> backButton;
     ScopedPointer<TextButton> powerOffButton;
     ScopedPointer<TextButton> rebootButton;
     ScopedPointer<TextButton> sleepButton;
     ScopedPointer<TextButton> felButton;
     ScopedPointer<Label> buildNameLabel;
+    ScopedPointer<Label> rev;
     ScopedPointer<Component> mainPage;
     ScopedPointer<ImageComponent> powerSpinner;
+    ScopedPointer<AlertWindow> updateWindow;
+    
     PowerSpinnerTimer powerSpinnerTimer;
     Array<Image> launchSpinnerImages;
     HashMap<String, Component *> pagesByName;
@@ -47,6 +51,8 @@ public:
   void buttonStateChanged(Button*) override;
   void buttonClicked(Button*) override;
   void setSleep();
+  
+  static unsigned char rev_number;
   
 private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PowerPageComponent)

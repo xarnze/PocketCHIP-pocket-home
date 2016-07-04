@@ -18,6 +18,8 @@ void PowerSpinnerTimer::timerCallback() {
     }
 }
 
+unsigned char PowerPageComponent::rev_number = 2;
+
 PowerPageComponent::PowerPageComponent() {
   bgColor = Colours::black;
   bgImage = createImageFromFile(assetFile("powerMenuBackground.png"));
@@ -27,7 +29,7 @@ PowerPageComponent::PowerPageComponent() {
   ChildProcess child{};
   
   felPage = new PowerFelPageComponent();
-
+  
   // create back button
   backButton = createImageButton(
       "Back", createImageFromFile(assetFile("nextIcon.png")));
@@ -93,6 +95,30 @@ PowerPageComponent::PowerPageComponent() {
   buildNameLabel->      setFont(16);
   buildNameLabel->setJustificationType(Justification::centred);
   addAndMakeVisible(buildNameLabel);
+  
+  //Create rev Text
+  String rev_string = std::to_string(rev_number);
+  rev = new Label("rev", ("Rev 1."+rev_string));
+  addAndMakeVisible(rev);
+  rev->setAlwaysOnTop(true);
+  rev->setFont(Font(20.f));
+    
+  //Update button
+  updateButton = new TextButton("Update");
+  updateButton->setButtonText("Check for updates");
+  updateButton->setAlwaysOnTop(true);
+  updateButton->addListener(this);
+  addAndMakeVisible(updateButton);
+  
+  updateButton->setVisible(false);
+  
+  //Update window
+  updateWindow = new AlertWindow("Checking for updates",
+                   "Downloading informations, please wait...", 
+                   AlertWindow::AlertIconType::NoIcon);
+  addAndMakeVisible(updateWindow, 10);
+  updateWindow->setAlwaysOnTop(true);
+  updateWindow->setVisible(false);
 }
 
 PowerPageComponent::~PowerPageComponent() {}
@@ -109,7 +135,9 @@ void PowerPageComponent::resized() {
    powerSpinner->setBounds(0, 0, bounds.getWidth(), bounds.getHeight());
 
   {
-    for (int i = 0, j = 0; i < 4; ++i) {
+    unsigned int number = 4;
+    
+    for (int i = 0, j = 0; i < number; ++i) {
       if (i > 0) verticalLayout.setItemLayout(j++, 0, -1, -1);
       verticalLayout.setItemLayout(j++, 48, 48, 48);
     }
@@ -122,7 +150,7 @@ void PowerPageComponent::resized() {
   }
 
   mainPage->setBounds(bounds);
-
+  
   powerOffButton->setBounds(bounds.getWidth()/7, 40, 350, 40);
   sleepButton->setBounds(bounds.getWidth()/7, 90, 350, 40);
   rebootButton->setBounds(bounds.getWidth()/7, 140, 350, 40);
@@ -131,6 +159,15 @@ void PowerPageComponent::resized() {
   
   buildNameLabel->setBounds(bounds.getX(), bounds.getY(), bounds.getWidth(), 30);
   buildNameLabel->setBoundsToFit(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), Justification::centredBottom, true);
+  rev->setBounds(bounds.getX(), bounds.getY(), 100, 30);
+  
+  updateButton->setBounds(bounds.getX()+372, bounds.getY()+5, 100, 30);
+  
+  int width = updateWindow->getWidth();
+  int height = updateWindow->getHeight();
+  int x = bounds.getWidth()/2-width/2;
+  int y = bounds.getHeight()/2-height/2;
+  updateWindow->setBounds(bounds.getX()+x, bounds.getY()+y, width, height);
 }
 
 void PowerPageComponent::setSleep() {
@@ -179,5 +216,17 @@ void PowerPageComponent::buttonClicked(Button *button) {
     setSleep();
   } else if (button == felButton) {
     getMainStack().pushPage(felPage, PageStackComponent::kTransitionTranslateHorizontalLeft);
+  } else if(button == updateButton){
+    updateWindow->setVisible(true);
+    resized();
+    //Downloading rev number information
+    StringArray cmd{"wget", "-O", "version", 
+                    "https://drive.google.com/uc?export=download&id=0B1jRc4IqT9kiNC12WVpoUUtCRUE"};
+    ChildProcess download;
+    bool ok = download.start(cmd, ChildProcess::StreamFlags::wantStdErr);
+    if(!ok) printf("Process not launched\n");
+    else printf("Process launched !\n");
+    String output = download.readAllProcessOutput();
+    updateWindow->setMessage("Download successful !");
   }
 }
