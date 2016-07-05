@@ -111,9 +111,9 @@
                 extraCompilerFlags="$(PKG_CONFIG_CFLAGS)">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
-                       targetName="pocket-home" binaryPath="build/Debug"/>
+                       targetName="pocket-home" binaryPath="build/Debug" headerPath="/usr/include/NetworkManager/&#10;/usr/include/libnm-glib/&#10;/usr/include/glib-2.0/"/>
         <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="3"
-                       targetName="pocket-home" binaryPath="build/Release"/>
+                       targetName="pocket-home" binaryPath="build/Release" headerPath="/usr/include/NetworkManager/&#10;/usr/include/libnm-glib/&#10;/usr/include/glib-2.0/&#10;"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="deps/JUCE/modules"/>
