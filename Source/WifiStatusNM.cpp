@@ -115,7 +115,7 @@ ScopedPointer<WifiAccessPoint> getNMConnectedAP(NMDeviceWifi *wdev) {
 
   if (!wdev || !ap) {
     DBG(__func__ << ": no NMAccessPoint found!");
-    return NULL;
+    return nullptr;
   }
 
   return createNMWifiAccessPoint(ap);
