@@ -31,3 +31,6 @@ make
 make devinstall
 sudo systemctl restart lightdm
 ```
+
+### Thanks
+Big thanks to [Celti](https://github.com/Celti) who made this repo updated to new JUCE version and easier to compile
