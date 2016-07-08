@@ -24,6 +24,8 @@ File assetFile(const String &fileName) {
   File linuxAssetFile = absoluteFileFromPath("/usr/share/pocket-home/" + fileName);
   // look in relative path, used in development builds
   assetFile = linuxAssetFile.exists() ? linuxAssetFile : devFile;
+  if(assetFile==devFile && !devFile.exists())
+    assetFile = absoluteFileFromPath(fileName);
 #else
   assetFile = devFile;
 #endif
