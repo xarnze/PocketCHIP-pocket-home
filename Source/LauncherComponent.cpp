@@ -116,6 +116,7 @@ void WifiIconTimer::timerCallback() {
 }
 
 LauncherComponent::LauncherComponent(const var &configJson)
+//trashButton(createImageButton("Trash", ImageFileFormat::loadFrom(assetFile("trash.png"))))
 {    
   /* Battery percentage label */
   batteryLabel = new Label("percentage", "-%");
@@ -126,6 +127,10 @@ LauncherComponent::LauncherComponent(const var &configJson)
 //   batteryLabel->addToDesktop(ComponentPeer::StyleFlags::windowIsSemiTransparent);
 
   /* Normal/Delete mode */
+//  addAndMakeVisible(trashButton);
+//  trashButton->addListener(this);
+//  trashButton->setAlwaysOnTop(true);
+  
   modeButton = new SwitchComponent;
   modeButton->setName("Switch");
   modeButton->addListener(this);
@@ -136,7 +141,7 @@ LauncherComponent::LauncherComponent(const var &configJson)
   
   String value = (configJson["background"]).toString();
   
-  bgColor = Colour(0x000000);
+  bgColor = Colour(0x4D4D4D);
   if(value.length()==6 && value.containsOnly("0123456789ABCDEF")){
     value = "FF" + value;
     unsigned int x;   

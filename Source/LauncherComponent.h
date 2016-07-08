@@ -54,6 +54,7 @@ public:
     ScopedPointer<Label> batteryLabel;
     ScopedPointer<Label> modeLabel;
     ScopedPointer<SwitchComponent> modeButton;
+    ScopedPointer<ImageButton> trashButton;
   
     LaunchSpinnerTimer launchSpinnerTimer;
     BatteryIconTimer batteryIconTimer;
