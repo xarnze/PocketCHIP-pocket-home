@@ -53,6 +53,7 @@ public:
   void setSleep();
   
   static unsigned char rev_number;
+  static unsigned char bug_number;
   
 private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PowerPageComponent)

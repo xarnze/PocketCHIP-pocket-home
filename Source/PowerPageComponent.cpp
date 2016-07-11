@@ -19,6 +19,7 @@ void PowerSpinnerTimer::timerCallback() {
 }
 
 unsigned char PowerPageComponent::rev_number = 6;
+unsigned char PowerPageComponent::bug_number = 1;
 
 PowerPageComponent::PowerPageComponent() {
   bgColor = Colours::black;
@@ -97,8 +98,10 @@ PowerPageComponent::PowerPageComponent() {
   addAndMakeVisible(buildNameLabel);
   
   //Create rev Text
-  String rev_string = std::to_string(rev_number);
-  rev = new Label("rev", ("v0.0."+rev_string));
+  String rev_string = "Alpha v"+std::to_string(rev_number);
+  if(bug_number != 0)
+    rev_string += "."+std::to_string(bug_number);
+  rev = new Label("rev", rev_string);
   addAndMakeVisible(rev);
   rev->setAlwaysOnTop(true);
   rev->setFont(Font(20.f));
