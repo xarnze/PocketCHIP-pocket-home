@@ -116,7 +116,6 @@ void WifiIconTimer::timerCallback() {
 }
 
 LauncherComponent::LauncherComponent(const var &configJson)
-//trashButton(createImageButton("Trash", ImageFileFormat::loadFrom(assetFile("trash.png"))))
 {    
   /* Battery percentage label */
   batteryLabel = new Label("percentage", "-%");
@@ -125,19 +124,6 @@ LauncherComponent::LauncherComponent(const var &configJson)
 //   batteryLabel->setOpaque(false);
 //   batteryLabel->setAlwaysOnTop(true);
 //   batteryLabel->addToDesktop(ComponentPeer::StyleFlags::windowIsSemiTransparent);
-
-  /* Normal/Delete mode */
-//  addAndMakeVisible(trashButton);
-//  trashButton->addListener(this);
-//  trashButton->setAlwaysOnTop(true);
-  
-  modeButton = new SwitchComponent;
-  modeButton->setName("Switch");
-  modeButton->addListener(this);
-  modeButton->setAlwaysOnTop(true);
-  modeLabel = new Label("mode", "Normal mode");
-  addAndMakeVisible(modeLabel);
-  addAndMakeVisible(modeButton);
   
   String value = (configJson["background"]).toString();
   
@@ -276,6 +262,23 @@ LauncherComponent::LauncherComponent(const var &configJson)
   wifiIconTimer.launcherComponent = this;
   wifiIconTimer.startTimer(2000);
   wifiIconTimer.timerCallback();
+  
+  /* Trash button */
+  deletemode = false;
+  trashButton = createImageButton(
+    "Trash", createImageFromFile(assetFile("trash.png")));
+  trashButton->setName("Trash");
+  trashButton->addListener(this);
+  trashButton->setAlwaysOnTop(true);
+  addAndMakeVisible(trashButton);
+  
+  trashActivated = createImageButton(
+    "TrashAct", createImageFromFile(assetFile("trash_red.png")));
+  trashActivated->setName("TrashAct");
+  trashActivated->addListener(this);
+  trashActivated->setAlwaysOnTop(true);
+  addAndMakeVisible(trashActivated);
+  trashActivated->setVisible(false);
 }
 
 LauncherComponent::~LauncherComponent() {
@@ -287,6 +290,7 @@ void LauncherComponent::paint(Graphics &g) {
   auto bounds = getLocalBounds();
   g.fillAll(bgColor);
   if(hasImg) g.drawImage(bgImage,bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), 0, 0, bgImage.getWidth(), bgImage.getHeight(), false);
+  //g.drawImage(trashButton, bounds.getX()+395, bounds.getY()+16, 40, 20, 0, 0, 50, 50, false);
 }
 
 void LauncherComponent::resized() {
@@ -303,8 +307,11 @@ void LauncherComponent::resized() {
   
   batteryLabel->setBounds(bounds.getX()+40, bounds.getY(), 50, 50);
   
-   modeLabel->setBounds(bounds.getX()+320, bounds.getY(), 100, 50);
-   modeButton->setBounds(bounds.getX()+395, bounds.getY()+16, 40, 20);
+   //modeLabel->setBounds(bounds.getX()+320, bounds.getY(), 100, 50);
+   //modeButton->setBounds(bounds.getX()+395, bounds.getY()+16, 40, 20);
+   
+   trashButton->setBounds(bounds.getX()+395, bounds.getY()+16, 40, 20);
+   trashActivated->setBounds(bounds.getX()+395, bounds.getY()+16, 40, 20);
   // init
   if (!resize) {
     resize = true;
@@ -330,12 +337,18 @@ void LauncherComponent::showAppsLibrary() {
 
 void LauncherComponent::buttonClicked(Button *button) {
   auto currentPage = pageStack->getCurrentPage();
-  
-  if (button->getName() == "Switch"){
-      if(!modeButton->getToggleState())
-	modeLabel->setText("Normal mode",dontSendNotification);
-      else modeLabel->setText("Delete mode",dontSendNotification);
-      return;
+
+  if(button->getName() == "Trash"){
+    deletemode = true;
+    trashButton->setVisible(false);
+    trashActivated->setVisible(true);
+    return;
+  }
+  else if(button->getName() == "TrashAct"){
+    deletemode = false;
+    trashButton->setVisible(true);
+    trashActivated->setVisible(false);
+    return;
   }
   
   if ((!currentPage || currentPage->getName() != button->getName()) &&
@@ -356,4 +369,8 @@ void LauncherComponent::deleteIcon(String name, String shell){
   system->deleteIcon(name,shell);
   execlp("/usr/bin/pocket-home", "/usr/bin/pocket-home", NULL);
   perror("Error rebooting application");
+}
+
+bool LauncherComponent::isDeleteMode(){
+  return deletemode;
 }

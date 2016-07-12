@@ -19,9 +19,8 @@ public:
 class PowerPageComponent : public Component, private Button::Listener {
 public:
 
-  StretchableLayoutManager verticalLayout;
+    StretchableLayoutManager verticalLayout;
     
-    ScopedPointer<TextButton> updateButton;
     ScopedPointer<ImageButton> backButton;
     ScopedPointer<TextButton> powerOffButton;
     ScopedPointer<TextButton> rebootButton;

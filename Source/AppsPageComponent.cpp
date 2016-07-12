@@ -286,7 +286,7 @@ void AppsPageComponent::buttonClicked(Button *button) {
     openAppsLibrary();
   }
   else {
-    if(launcherComponent->modeButton->getToggleState()){
+    if(launcherComponent->isDeleteMode()){
       //Delete mode
       bool answer = AlertWindow::showOkCancelBox(AlertWindow::AlertIconType::WarningIcon,
                                    "Delete icon ?", 

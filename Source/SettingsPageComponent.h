@@ -191,6 +191,7 @@ private:
   TextButton add_btn;
   
   TextButton apply;
+  TextButton reboot;
   TextEditor edit_back;
   TextEditor edit_name;
   TextEditor edit_icn;

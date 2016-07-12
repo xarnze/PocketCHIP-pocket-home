@@ -395,7 +395,7 @@ void SettingsPageComponent::sliderDragEnded(IconSliderComponent* slider) {
 PersonalizePageComponent::PersonalizePageComponent():
 background("lab_back","Background"), icons("lab_icons","Icons management"), opt_back("opt_back",""),
 opt_name("opt_name", "Name:"), opt_img("opt_img", "Icon path:"), opt_shell("opt_shell", "Command:"),
-add_btn("Add"), apply("Apply"), choose_back("back_box"), edit_back("back_field"),
+add_btn("Add"), apply("Apply"), reboot("RebootGUI"), choose_back("back_box"), edit_back("back_field"),
 edit_name("name"), edit_icn("icn"), edit_shell("shell"), config(assetConfigFile("config.json")),
 json(JSON::parse(config)), success("suc", "Success !")
 {
@@ -416,8 +416,10 @@ json(JSON::parse(config)), success("suc", "Success !")
   addAndMakeVisible(icons);
   addAndMakeVisible(add_btn);
   addAndMakeVisible(apply);
+  addAndMakeVisible(reboot);
   addAndMakeVisible(success);
   apply.addListener(this);
+  reboot.addListener(this);
   add_btn.addListener(this);
   /* ComboBox */
   choose_back.addItem("Default",1);
@@ -493,8 +495,11 @@ void PersonalizePageComponent::resized(){
     }
   }
   
-  apply.setBounds(x, y, 385, btn_height);
-  success.setBounds(x+130, y, 385, btn_height);
+  
+  apply.setBounds(x+225, y, 150, btn_height);
+  reboot.setBounds(x, y, 150, btn_height);
+  
+  success.setBounds(x+225, y, 150, btn_height);
 }
 
 void PersonalizePageComponent::buttonClicked(Button* button){
@@ -503,6 +508,10 @@ void PersonalizePageComponent::buttonClicked(Button* button){
     resetApplySuccess();
     opt_back.setVisible(false);
     choose_back.setSelectedId(1);
+  }
+  else if(button == &reboot){
+    execlp("/usr/bin/pocket-home", "/usr/bin/pocket-home", NULL);
+    perror("Error rebooting application");
   }
   else if(button == &apply){
     bool ok = updateJSON();

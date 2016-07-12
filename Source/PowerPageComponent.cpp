@@ -105,15 +105,6 @@ PowerPageComponent::PowerPageComponent() {
   addAndMakeVisible(rev);
   rev->setAlwaysOnTop(true);
   rev->setFont(Font(20.f));
-    
-  //Update button
-  updateButton = new TextButton("Update");
-  updateButton->setButtonText("Check for updates");
-  updateButton->setAlwaysOnTop(true);
-  updateButton->addListener(this);
-  addAndMakeVisible(updateButton);
-  
-  updateButton->setVisible(false);
   
   //Update window
   updateWindow = new AlertWindow("Checking for updates",
@@ -163,9 +154,7 @@ void PowerPageComponent::resized() {
   buildNameLabel->setBounds(bounds.getX(), bounds.getY(), bounds.getWidth(), 30);
   buildNameLabel->setBoundsToFit(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), Justification::centredBottom, true);
   rev->setBounds(bounds.getX(), bounds.getY(), 100, 30);
-  
-  updateButton->setBounds(bounds.getX()+372, bounds.getY()+5, 100, 30);
-  
+    
   int width = updateWindow->getWidth();
   int height = updateWindow->getHeight();
   int x = bounds.getWidth()/2-width/2;
@@ -219,17 +208,5 @@ void PowerPageComponent::buttonClicked(Button *button) {
     setSleep();
   } else if (button == felButton) {
     getMainStack().pushPage(felPage, PageStackComponent::kTransitionTranslateHorizontalLeft);
-  } else if(button == updateButton){
-    updateWindow->setVisible(true);
-    resized();
-    //Downloading rev number information
-    StringArray cmd{"wget", "-O", "version", 
-                    "https://drive.google.com/uc?export=download&id=0B1jRc4IqT9kiNC12WVpoUUtCRUE"};
-    ChildProcess download;
-    bool ok = download.start(cmd, ChildProcess::StreamFlags::wantStdErr);
-    if(!ok) printf("Process not launched\n");
-    else printf("Process launched !\n");
-    String output = download.readAllProcessOutput();
-    updateWindow->setMessage("Download successful !");
   }
 }

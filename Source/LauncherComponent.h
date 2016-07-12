@@ -53,8 +53,6 @@ public:
     
     ScopedPointer<Label> batteryLabel;
     ScopedPointer<Label> modeLabel;
-    ScopedPointer<SwitchComponent> modeButton;
-    ScopedPointer<ImageButton> trashButton;
   
     LaunchSpinnerTimer launchSpinnerTimer;
     BatteryIconTimer batteryIconTimer;
@@ -82,13 +80,17 @@ public:
     void hideLaunchSpinner();
 
     void deleteIcon(String,String);
+    bool isDeleteMode();
   
 private:
     Colour bgColor;
     Image bgImage;
     bool hasImg;
+    bool deletemode;
   
     void buttonClicked(Button *) override;
+    ScopedPointer<ImageButton> trashButton;
+    ScopedPointer<ImageButton> trashActivated;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LauncherComponent)
 };
