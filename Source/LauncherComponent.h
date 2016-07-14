@@ -81,7 +81,10 @@ public:
 
     void deleteIcon(String,String);
     bool isDeleteMode();
-  
+    void addIcon(const String&, const String&, const String&);
+    void setColorBackground(const String&);
+    void setImageBackground(const String&);
+    
 private:
     Colour bgColor;
     Image bgImage;

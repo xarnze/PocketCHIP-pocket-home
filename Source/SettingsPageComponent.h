@@ -122,7 +122,7 @@ public:
 
   StretchableLayoutManager verticalLayout;
 
-  SettingsPageComponent();
+  SettingsPageComponent(LauncherComponent*);
   ~SettingsPageComponent();
 
   void paint(Graphics &g) override;
@@ -153,7 +153,7 @@ private:
 /* Adding personnalization page */
 class PersonalizePageComponent : public Component, private Button::Listener, private ComboBox::Listener {
 public:
-  PersonalizePageComponent();
+  PersonalizePageComponent(LauncherComponent*);
   ~PersonalizePageComponent();
   
   void paint(Graphics &g) override;
@@ -168,12 +168,16 @@ private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PersonalizePageComponent)
   void updateFile(bool);
   bool updateJSON();
+  void updateComboBox();
   
   ScopedPointer<ImageButton> backButton;
   Colour bgColor;
   Image bgImage;
   File config;
   var json;
+  
+  /* Launcher component */
+  LauncherComponent* lcomp;
   
   /* Labels for inputs */
   Label background;
@@ -189,9 +193,9 @@ private:
   /* Inputs */
   ComboBox choose_back;
   TextButton add_btn;
+  TextButton browse;
   
   TextButton apply;
-  TextButton reboot;
   TextEditor edit_back;
   TextEditor edit_name;
   TextEditor edit_icn;

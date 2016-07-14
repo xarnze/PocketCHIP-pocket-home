@@ -115,6 +115,26 @@ void WifiIconTimer::timerCallback() {
   }
 }
 
+void LauncherComponent::setColorBackground(const String& str){
+    String value = "FF" + str;
+    unsigned int x;   
+    std::stringstream ss;
+    ss << std::hex << value;
+    ss >> x;
+    bgColor = Colour(x);
+    hasImg = false;
+}
+
+void LauncherComponent::setImageBackground(const String& str){
+    String value(str);
+    if(value == "") value = "mainBackground.png";
+    File f;
+    if(value[0]=='~' || value[0]=='/') f = File(value);
+    else f = assetFile(value);
+    bgImage = createImageFromFile(f);
+    hasImg = true;
+}
+
 LauncherComponent::LauncherComponent(const var &configJson)
 {    
   /* Battery percentage label */
@@ -128,23 +148,11 @@ LauncherComponent::LauncherComponent(const var &configJson)
   String value = (configJson["background"]).toString();
   
   bgColor = Colour(0x4D4D4D);
-  if(value.length()==6 && value.containsOnly("0123456789ABCDEF")){
-    value = "FF" + value;
-    unsigned int x;   
-    std::stringstream ss;
-    ss << std::hex << value;
-    ss >> x;
-    bgColor = Colour(x);
-    hasImg = false;
-  }
-  else{
-    if(value == "") value = "mainBackground.png";
-    File f;
-    if(value[0]=='~' || value[0]=='/') f = File(value);
-    else f = assetFile(value);
-    bgImage = createImageFromFile(f);
-    hasImg = true;
-  }
+  if(value.length()==6 && value.containsOnly("0123456789ABCDEF"))
+    setColorBackground(value);
+  else
+    setImageBackground(value);
+  
   pageStack = new PageStackComponent();
   addAndMakeVisible(pageStack);
 
@@ -190,7 +198,7 @@ LauncherComponent::LauncherComponent(const var &configJson)
   addChildComponent(focusButtonPopup);
   
   // Settings page
-  auto settingsPage = new SettingsPageComponent();
+  auto settingsPage = new SettingsPageComponent(this);
   settingsPage->setName("Settings");
   pages.add(settingsPage);
   pagesByName.set("Settings", settingsPage);
@@ -317,6 +325,12 @@ void LauncherComponent::resized() {
     resize = true;
     pageStack->swapPage(defaultPage, PageStackComponent::kTransitionNone);
   }
+}
+
+void LauncherComponent::addIcon(const String& name, const String& path, const String& shell){
+  AppsPageComponent* appsPage = (AppsPageComponent*) pagesByName["Apps"];
+  DrawableButton* db = appsPage->createAndOwnIcon(name, path, shell);
+  db->setWantsKeyboardFocus(false);
 }
 
 void LauncherComponent::showLaunchSpinner() {

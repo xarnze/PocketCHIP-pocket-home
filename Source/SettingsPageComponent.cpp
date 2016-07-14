@@ -210,7 +210,7 @@ void BluetoothCategoryItemComponent::updateButtonText() {
 }
 
 
-SettingsPageComponent::SettingsPageComponent() {
+SettingsPageComponent::SettingsPageComponent(LauncherComponent* lc) {
   bgColor = Colour(0xffd23c6d);
   bgImage = createImageFromFile(assetFile("settingsBackground.png"));
   mainPage = new Component();
@@ -219,7 +219,7 @@ SettingsPageComponent::SettingsPageComponent() {
   ChildProcess child{};
 
   /* Adding the personalize button */
-  persoPage = new PersonalizePageComponent();
+  persoPage = new PersonalizePageComponent(lc);
   persoButton = new TextButton("Personalize");
   persoButton->addListener(this);
   addAndMakeVisible(persoButton);
@@ -392,12 +392,13 @@ void SettingsPageComponent::sliderDragEnded(IconSliderComponent* slider) {
 }
 
 /* Personalize class */
-PersonalizePageComponent::PersonalizePageComponent():
+PersonalizePageComponent::PersonalizePageComponent(LauncherComponent* lc):
+lcomp(lc),
 background("lab_back","Background"), icons("lab_icons","Icons management"), opt_back("opt_back",""),
 opt_name("opt_name", "Name:"), opt_img("opt_img", "Icon path:"), opt_shell("opt_shell", "Command:"),
-add_btn("Add"), apply("Apply"), reboot("RebootGUI"), choose_back("back_box"), edit_back("back_field"),
+add_btn("Add"), apply("Apply"), choose_back("back_box"), edit_back("back_field"),
 edit_name("name"), edit_icn("icn"), edit_shell("shell"), config(assetConfigFile("config.json")),
-json(JSON::parse(config)), success("suc", "Success !")
+json(JSON::parse(config)), success("suc", "Success !"), browse("...")
 {
   bgColor = Colour(0xffd23c6d);
   bgImage = createImageFromFile(assetFile("settingsBackground.png"));
@@ -416,10 +417,8 @@ json(JSON::parse(config)), success("suc", "Success !")
   addAndMakeVisible(icons);
   addAndMakeVisible(add_btn);
   addAndMakeVisible(apply);
-  addAndMakeVisible(reboot);
   addAndMakeVisible(success);
   apply.addListener(this);
-  reboot.addListener(this);
   add_btn.addListener(this);
   /* ComboBox */
   choose_back.addItem("Default",1);
@@ -439,18 +438,44 @@ json(JSON::parse(config)), success("suc", "Success !")
   addAndMakeVisible(edit_name);
   addAndMakeVisible(edit_icn);
   addAndMakeVisible(edit_shell);
+  addAndMakeVisible(browse);
   
+  browse.addListener(this);
   showAddComponents(false);
   success.setVisible(false);
+  browse.setVisible(false);
   
-  // create back button
+  /* Create back button */
   backButton = createImageButton("Back", createImageFromFile(assetFile("backIcon.png")));
   backButton->addListener(this);
   backButton->setAlwaysOnTop(true);
   addAndMakeVisible(backButton);
+
+  updateComboBox();
 }
 
 PersonalizePageComponent::~PersonalizePageComponent(){
+}
+
+void PersonalizePageComponent::updateComboBox(){
+  /* Checking the current configuration */
+  String background = (json["background"]).toString();
+  bool display = false;
+  if(background.length()==0);
+  else if(background.length()==6 && 
+          background.containsOnly("0123456789ABCDEF")){
+    choose_back.setSelectedItemIndex(1, sendNotificationSync);
+    display = true;
+    edit_back.setText(background);
+  }
+  else{
+    choose_back.setSelectedItemIndex(2, sendNotificationSync);
+    display = true;
+    edit_back.setText(background);
+  }
+  
+  edit_back.setVisible(display);
+  opt_back.setVisible(display);
 }
 
 void PersonalizePageComponent::paint(Graphics &g){
@@ -474,8 +499,9 @@ void PersonalizePageComponent::resized(){
 		    btn_width, btn_height);
   
   opt_back.setBounds(bounds.getX()+70, bounds.getY()+70, 150, btn_height);
-  edit_back.setBounds(bounds.getX()+155, bounds.getY()+70, 295, btn_height);
-  
+  edit_back.setBounds(bounds.getX()+155, bounds.getY()+70, 265, btn_height);
+  browse.setBounds(bounds.getX()+422, bounds.getY()+70, 30, btn_height);
+
   int gap = 40;
   int x = bounds.getX()+70;
   int y = bounds.getY()+65+bounds.getHeight()/3;
@@ -495,23 +521,16 @@ void PersonalizePageComponent::resized(){
     }
   }
   
+  apply.setBounds(x, y, 385, btn_height);
+  success.setBounds(x+130, y, 385, btn_height);
   
-  apply.setBounds(x+225, y, 150, btn_height);
-  reboot.setBounds(x, y, 150, btn_height);
-  
-  success.setBounds(x+225, y, 150, btn_height);
 }
 
 void PersonalizePageComponent::buttonClicked(Button* button){
   if (button == backButton) {
     getMainStack().popPage(PageStackComponent::kTransitionTranslateHorizontal);
     resetApplySuccess();
-    opt_back.setVisible(false);
-    choose_back.setSelectedId(1);
-  }
-  else if(button == &reboot){
-    execlp("/usr/bin/pocket-home", "/usr/bin/pocket-home", NULL);
-    perror("Error rebooting application");
+    updateComboBox();
   }
   else if(button == &apply){
     bool ok = updateJSON();
@@ -519,6 +538,29 @@ void PersonalizePageComponent::buttonClicked(Button* button){
   }
   else if(button == &add_btn){
     showAddComponents(true);
+  }
+  else if(button == &browse){
+    WildcardFileFilter wildcardFilter ("*.png", 
+                                       String::empty,
+                                       "Image files");
+
+    FileBrowserComponent browser (FileBrowserComponent::canSelectFiles |
+                                  FileBrowserComponent::openMode,
+                                  File::nonexistent,
+                                  &wildcardFilter,
+                                  nullptr);
+
+    FileChooserDialogBox dialogBox ("Choose the new background",
+                                    "Please choose your new background (png) image",
+                                    browser,
+                                    false,
+                                    Colours::lightgrey);
+      
+    if(dialogBox.show()){
+      File selectedFile = browser.getSelectedFile (0);
+      String path = selectedFile.getFullPathName();
+      edit_back.setText(path);
+    }
   }
 }
 
@@ -534,13 +576,18 @@ void PersonalizePageComponent::showAddComponents(bool show){
 void PersonalizePageComponent::comboBoxChanged(ComboBox* box){
   if(box == &choose_back){
     edit_back.setText("");
+    browse.setVisible(false);
     if(box->getSelectedId()==1){
       edit_back.setVisible(false);
       opt_back.setVisible(false);
       return;
     }
-    else if(box->getSelectedId()==2) opt_back.setText("Hex value:", dontSendNotification);
-    else if(box->getSelectedId()==3) opt_back.setText("Image path:", dontSendNotification);
+    else if(box->getSelectedId()==2)
+      opt_back.setText("Hex value:", dontSendNotification);
+    else if(box->getSelectedId()==3){
+      browse.setVisible(true);
+      opt_back.setText("Image path:", dontSendNotification);
+    }
     edit_back.setVisible(true);
     opt_back.setVisible(true);
   }
@@ -580,6 +627,9 @@ bool PersonalizePageComponent::updateJSON(){
     var icn_var(new_icn);
     items_arr->add(icn_var);
     name_b = true;
+    
+    /* Adding to the grid */
+    lcomp->addIcon(name, path, cmmd);
   }
   if(choose_back.getSelectedId()==2){
     String value = edit_back.getText().toUpperCase();
@@ -589,6 +639,9 @@ bool PersonalizePageComponent::updateJSON(){
       DynamicObject* new_back = json.getDynamicObject();
       new_back->setProperty("background",value);
       color_b = true;
+
+      /* Change background in LauncherComponent */
+      lcomp->setColorBackground(value);
     }
   }
   if(choose_back.getSelectedId()==3){
@@ -596,6 +649,9 @@ bool PersonalizePageComponent::updateJSON(){
     DynamicObject* new_back = json.getDynamicObject();
     new_back->setProperty("background",value);
     color_b = true;
+
+    /* Change background in LauncherComponent */
+    lcomp->setImageBackground(value);
   }
   
   return name_b || color_b;
