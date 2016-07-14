@@ -18,8 +18,8 @@ void PowerSpinnerTimer::timerCallback() {
     }
 }
 
-unsigned char PowerPageComponent::rev_number = 6;
-unsigned char PowerPageComponent::bug_number = 1;
+unsigned char PowerPageComponent::rev_number = 7;
+unsigned char PowerPageComponent::bug_number = 0;
 
 PowerPageComponent::PowerPageComponent() {
   bgColor = Colours::black;
