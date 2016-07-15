@@ -555,8 +555,7 @@ void PersonalizePageComponent::buttonClicked(Button* button){
                                     browser,
                                     false,
                                     Colours::lightgrey);
-      
-    if(dialogBox.show()){
+    if(dialogBox.show(480,272)){
       File selectedFile = browser.getSelectedFile (0);
       String path = selectedFile.getFullPathName();
       edit_back.setText(path);
