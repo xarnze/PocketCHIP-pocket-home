@@ -331,6 +331,7 @@ void LauncherComponent::addIcon(const String& name, const String& path, const St
   AppsPageComponent* appsPage = (AppsPageComponent*) pagesByName["Apps"];
   DrawableButton* db = appsPage->createAndOwnIcon(name, path, shell);
   db->setWantsKeyboardFocus(false);
+  appsPage->checkShowPageNav();
 }
 
 void LauncherComponent::showLaunchSpinner() {
