@@ -630,6 +630,12 @@ bool PersonalizePageComponent::updateJSON(){
     /* Adding to the grid */
     lcomp->addIcon(name, path, cmmd);
   }
+  if(choose_back.getSelectedId()==1){
+    DynamicObject* new_back = json.getDynamicObject();
+    new_back->setProperty("background","4D4D4D");
+    color_b = true;
+    lcomp->setColorBackground("4D4D4D");
+  }
   if(choose_back.getSelectedId()==2){
     String value = edit_back.getText().toUpperCase();
     if(value.length()!=6 || !value.containsOnly("0123456789ABCDEF"))
