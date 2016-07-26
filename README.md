@@ -13,7 +13,8 @@ sudo apt-get install \
     libxinerama-dev \
     libnm-glib-dev \
     network-manager-dev \
-    libi2c-dev
+    libi2c-dev \
+    libnm-gtk-dev
 ```
 
 ## Building
