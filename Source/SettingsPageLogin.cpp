@@ -6,7 +6,7 @@ cur_label("CurLabel", "Current password"), cur_password("Current",0x2022),
 new_label("NewLabel", "New password"), new_password("New", 0x2022),
 ret_label("ConfLabel", "Retype password"), ret_password("Confirmation", 0x2022),
 bg_color(0xffd23c6d), title("Title", "Change your password"),
-deletemode(false)
+deletemode(false), has_file(false), has_password(false)
 {
   //Title
   title.setFont(Font(25.f));
@@ -109,6 +109,7 @@ void SettingsPageLogin::loadPassword(){
       cur_hashed = content;
     }
   }
+  else createIfNotExists();
 }
 
 bool SettingsPageLogin::isPasswordCorrect(const String& pass){
@@ -134,6 +135,9 @@ void SettingsPageLogin::createIfNotExists(){
     res = write(fd, "none\n", 5);
     if(res != 5) fprintf(stderr, "Couldn't write correctly the password\n");
     close(fd);
+    
+    has_file = true;
+    has_password = false;
   }
 }
 
@@ -209,7 +213,6 @@ void SettingsPageLogin::deletePassword(){
 void SettingsPageLogin::savePassword(){
   if(!passwordIdentical()) return;
   loadPassword();
-  createIfNotExists();
   String typed_root = root_password.getText();
   String typed_current = cur_password.getText();
   String typed_new = new_password.getText();
