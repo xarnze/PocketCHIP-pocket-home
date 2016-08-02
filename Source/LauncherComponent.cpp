@@ -135,8 +135,31 @@ void LauncherComponent::setImageBackground(const String& str){
     hasImg = true;
 }
 
-LauncherComponent::LauncherComponent(const var &configJson)
-{    
+void LauncherComponent::setClockVisible(bool visible){
+  if(visible){
+    if(clock->isThreadRunning()) return;
+    addAndMakeVisible(clock->getLabel(), 10);
+    clock->startThread();
+  }else{
+    if(!clock->isThreadRunning()) return;
+    Label& l = clock->getLabel();
+    removeChildComponent(&l);
+    clock->stopThread(1500);
+  }
+}
+
+LauncherComponent::LauncherComponent(const var &configJson) :
+clock(nullptr)
+{
+  /* Setting the clock */
+  clock = new ClockMonitor;
+  clock->getLabel().setBounds(390, 0, 50, 50);
+  String displayclock = (configJson["showclock"]).toString();
+  if(displayclock.length()==0 || displayclock==String("yes"))
+    setClockVisible(true);
+  else
+    setClockVisible(false);
+  
   /* Battery percentage label */
   batteryLabel = new Label("percentage", "-%");
   addAndMakeVisible(batteryLabel);
@@ -270,23 +293,7 @@ LauncherComponent::LauncherComponent(const var &configJson)
   wifiIconTimer.launcherComponent = this;
   wifiIconTimer.startTimer(2000);
   wifiIconTimer.timerCallback();
-  
-  /* Trash button */
-  deletemode = false;
-  trashButton = createImageButton(
-    "Trash", createImageFromFile(assetFile("trash.png")));
-  trashButton->setName("Trash");
-  trashButton->addListener(this);
-  trashButton->setAlwaysOnTop(true);
-  addAndMakeVisible(trashButton);
-  
-  trashActivated = createImageButton(
-    "TrashAct", createImageFromFile(assetFile("trash_red.png")));
-  trashActivated->setName("TrashAct");
-  trashActivated->addListener(this);
-  trashActivated->setAlwaysOnTop(true);
-  addAndMakeVisible(trashActivated);
-  trashActivated->setVisible(false);
+
 }
 
 LauncherComponent::~LauncherComponent() {
@@ -315,11 +322,8 @@ void LauncherComponent::resized() {
   
   batteryLabel->setBounds(bounds.getX()+40, bounds.getY(), 50, 50);
   
-   //modeLabel->setBounds(bounds.getX()+320, bounds.getY(), 100, 50);
-   //modeButton->setBounds(bounds.getX()+395, bounds.getY()+16, 40, 20);
+  clock->getLabel().setBounds(bounds.getX()+390, bounds.getY(), 50, 50);
    
-   trashButton->setBounds(bounds.getX()+395, bounds.getY()+16, 40, 20);
-   trashActivated->setBounds(bounds.getX()+395, bounds.getY()+16, 40, 20);
   // init
   if (!resize) {
     resize = true;
@@ -352,19 +356,6 @@ void LauncherComponent::showAppsLibrary() {
 
 void LauncherComponent::buttonClicked(Button *button) {
   auto currentPage = pageStack->getCurrentPage();
-
-  if(button->getName() == "Trash"){
-    deletemode = true;
-    trashButton->setVisible(false);
-    trashActivated->setVisible(true);
-    return;
-  }
-  else if(button->getName() == "TrashAct"){
-    deletemode = false;
-    trashButton->setVisible(true);
-    trashActivated->setVisible(false);
-    return;
-  }
   
   if ((!currentPage || currentPage->getName() != button->getName()) &&
       pagesByName.contains(button->getName())) {
@@ -384,8 +375,4 @@ void LauncherComponent::deleteIcon(String name, String shell){
   system->deleteIcon(name,shell);
   execlp("/usr/bin/pocket-home", "/usr/bin/pocket-home", NULL);
   perror("Error rebooting application");
-}
-
-bool LauncherComponent::isDeleteMode(){
-  return deletemode;
 }

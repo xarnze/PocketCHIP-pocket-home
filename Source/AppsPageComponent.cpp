@@ -85,6 +85,7 @@ void AppListComponent::resized() {
   auto gridHeight = b.getHeight() - (2.0*btnHeight);
   grid->setSize(gridWidth, gridHeight);
   grid->setBoundsToFit(b.getX(), b.getY(), b.getWidth(), b.getHeight(), Justification::centred, true);
+  
 }
 
 void AppListComponent::checkShowPageNav() {
@@ -107,6 +108,8 @@ void AppListComponent::addAndOwnIcon(const String &name, Component *icon) {
   gridIcons.add(icon);
   grid->addItem(icon);
   ((Button*)icon)->addListener(this);
+  /* Temporary */
+  ((Button*)icon)->addMouseListener(this, false);
 }
 
 Array<DrawableButton *> AppListComponent::createIconsFromJsonArray(const var &json) {
@@ -137,6 +140,16 @@ AppsPageComponent::AppsPageComponent(LauncherComponent* launcherComponent) :
 {
   runningCheckTimer.appsPage = this;
   debounceTimer.appsPage = this;
+  cpy = nullptr;
+  
+  //Trash Icon
+  trashButton = createImageButton(
+    "Trash", createImageFromFile(assetFile("trash.png")));
+  trashButton->setName("Trash");
+  trashButton->setAlwaysOnTop(true);
+  addAndMakeVisible(trashButton, 100);
+  trashButton->setBounds(170, 15, 40, 20);
+  trashButton->setVisible(false);
 }
 
 AppsPageComponent::~AppsPageComponent() {}
@@ -273,6 +286,49 @@ void AppsPageComponent::buttonStateChanged(Button* btn) {
   }
 }
 
+void AppsPageComponent::mouseDrag(const MouseEvent& me){
+  if(me.originalComponent == this) return;
+  prevPageBtn->setVisible(false);
+  
+  Point<int> pi = me.getPosition();
+  Point<int> res = this->getLocalPoint(nullptr, me.getScreenPosition());
+  if(cpy==nullptr){
+    DrawableButton* dragging = (DrawableButton* const) me.originalComponent;
+    Drawable* img = dragging->getNormalImage();
+    cpy = img->createCopy();
+    cpy->setOriginWithOriginalSize(Point<float>(0.f,0.f));
+    addAndMakeVisible(cpy);
+  }
+  int drag_x = res.x - cpy->getWidth()/2;
+  int drag_y = res.y - cpy->getHeight()/2;
+  trashButton->setVisible(true);
+  if(drag_y <= 10) cpy->setAlpha(0.3);
+  else cpy->setAlpha(0.9);
+  cpy->setBounds(drag_x, drag_y, cpy->getWidth(), cpy->getHeight());
+}
+
+void AppsPageComponent::mouseUp(const MouseEvent& me){
+  if(!cpy) return;
+  if(cpy->getAlpha()>=0.25 && cpy->getAlpha()<=0.35){
+    //On Delete icon
+    Button* button = (Button*) me.originalComponent;
+    bool answer = AlertWindow::showOkCancelBox(AlertWindow::AlertIconType::WarningIcon,
+                                  "Delete icon ?", 
+                                  "Are you sure you want to delete "+button->getName()+" ?",
+                                  "Yes",
+                                  "No"
+                                 );
+    if(answer){
+        auto appButton = (AppIconButton*) button;
+        launcherComponent->deleteIcon(button->getName(), appButton->shell);
+    }
+  }
+  trashButton->setVisible(false);
+  removeChildComponent(cpy);
+  cpy = nullptr;
+  checkShowPageNav();
+}
+
 void AppsPageComponent::buttonClicked(Button *button) {
   if (button == prevPageBtn) {
     grid->showPrevPage();
@@ -286,23 +342,10 @@ void AppsPageComponent::buttonClicked(Button *button) {
     openAppsLibrary();
   }
   else {
-    if(launcherComponent->isDeleteMode()){
-      //Delete mode
-      bool answer = AlertWindow::showOkCancelBox(AlertWindow::AlertIconType::WarningIcon,
-                                   "Delete icon ?", 
-                                   "Are you sure you want to delete "+button->getName()+" ?",
-                                   "Yes",
-                                   "No"
-                                  );
-        if(answer){
-            auto appButton = (AppIconButton*) button;
-            launcherComponent->deleteIcon(button->getName(), appButton->shell);
-        }
-    } else {
-      //Normal mode
-      auto appButton = (AppIconButton*)button;
-      startOrFocusApp(appButton);
-    }
+    /*ModifierKeys mk = ModifierKeys::getCurrentModifiers ();
+    if(mk==ModifierKeys::ctrlModifier);*/
+    auto appButton = (AppIconButton*)button;
+    startOrFocusApp(appButton);
   }
 }
 

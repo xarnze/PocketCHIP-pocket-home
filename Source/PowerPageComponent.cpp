@@ -18,7 +18,7 @@ void PowerSpinnerTimer::timerCallback() {
     }
 }
 
-unsigned char PowerPageComponent::rev_number = 7;
+unsigned char PowerPageComponent::rev_number = 8;
 unsigned char PowerPageComponent::bug_number = 0;
 
 PowerPageComponent::PowerPageComponent() {

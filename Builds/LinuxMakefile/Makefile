@@ -41,7 +41,7 @@ ifeq ($(CONFIG),Release)
   CPPFLAGS := $(DEPFLAGS) -DLINUX=1 -DNDEBUG=1 -DJUCER_LINUX_MAKE_6D53C8B4=1 -DJUCE_APP_VERSION=0.0.1 -DJUCE_APP_VERSION_HEX=0x1 -I /usr/include -I /usr/include/freetype2 -I ../../JuceLibraryCode -I ../../deps/JUCE/modules
   CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -O3 $(PKG_CONFIG_CFLAGS)
   CXXFLAGS += $(CFLAGS) -std=c++11
-  LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -fvisibility=hidden -L/usr/X11R6/lib/ -lX11 -lXext -lXinerama -ldl -lfreetype -lpthread -lrt $(PKG_CONFIG_LDFLAGS) -lasound `pkg-config --cflags --libs gtk+-3.0 libnm-gtk libnm-glib libnm-util`
+  LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -fvisibility=hidden -L/usr/X11R6/lib/ -lX11 -lXext -lXinerama -ldl -lfreetype -lpthread -lrt $(PKG_CONFIG_LDFLAGS) -lasound `pkg-config --cflags --libs gtk+-3.0 libnm-gtk libnm-glib libnm-util` -lcrypto
 
   TARGET := pocket-home
   BLDCMD = $(CXX) -o $(OUTDIR)/$(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(TARGET_ARCH)
@@ -50,6 +50,10 @@ endif
 
 OBJECTS := \
   $(OBJDIR)/Grid_a461bccf.o \
+  $(OBJDIR)/ClockMonitor.o \
+  $(OBJDIR)/SettingsPageLogin.o \
+  $(OBJDIR)/PersonalizePageComponent.o \
+  $(OBJDIR)/AdvancedSettingsPage.o \
   $(OBJDIR)/PowerPageFelComponent_e97c8ca5.o \
   $(OBJDIR)/LibraryPageComponent_6532e93c.o \
   $(OBJDIR)/PowerPageComponent_4a26c732.o \
@@ -97,6 +101,26 @@ strip:
 $(OBJDIR)/Grid_a461bccf.o: ../../Source/Grid.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Grid.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/ClockMonitor.o: ../../Source/ClockMonitor.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling ClockMonitor.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/PersonalizePageComponent.o: ../../Source/PersonalizePageComponent.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling PersonalizePageComponent.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/SettingsPageLogin.o: ../../Source/SettingsPageLogin.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling SettingsPageLogin.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/AdvancedSettingsPage.o : ../../Source/AdvancedSettingsPage.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling AdvancedSettingsPage.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/PowerPageFelComponent_e97c8ca5.o: ../../Source/PowerPageFelComponent.cpp

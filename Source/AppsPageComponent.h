@@ -32,7 +32,7 @@ public:
   Rectangle<float> getImageBounds() const override;
 };
 
-class AppListComponent : public Component, public Button::Listener {
+class AppListComponent : public Component, public Button::Listener{
 public:
   AppListComponent();
   ~AppListComponent();
@@ -57,6 +57,7 @@ public:
   void buttonStateChanged(Button*) override {};
   void buttonClicked(Button *button) override {};
   
+  void mouseDrag(const MouseEvent&) override {};
   // FIXME: this is barsize from launcher component
   double btnHeight = 50;
   
@@ -64,7 +65,7 @@ private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AppListComponent)
 };
 
-class AppsPageComponent : public AppListComponent {
+class AppsPageComponent : public AppListComponent{
 public:
   AppsPageComponent(LauncherComponent* launcherComponent);
   ~AppsPageComponent();
@@ -75,6 +76,8 @@ public:
   
   virtual void buttonStateChanged(Button*) override;
   void buttonClicked(Button *button) override;
+  void mouseDrag(const MouseEvent&) override;
+  void mouseUp(const MouseEvent&) override;
   
   void checkRunningApps();
   
@@ -82,6 +85,7 @@ public:
 
 private:
   using AppRunningMap = HashMap<AppIconButton*, int>;
+  ScopedPointer<Drawable> cpy;
 
   DrawableButton* appsLibraryBtn;
   LauncherComponent* launcherComponent;
@@ -94,6 +98,9 @@ private:
   void focusApp(AppIconButton* appButton, const String& windowId);
   void startOrFocusApp(AppIconButton* appButton);
   void openAppsLibrary();
+  
+  //Trash Icon
+  ScopedPointer<ImageButton> trashButton;  
   
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AppsPageComponent)
 };

@@ -6,6 +6,7 @@
 #include "PageStackComponent.h"
 #include "BatteryMonitor.h"
 #include "SwitchComponent.h"
+#include "ClockMonitor.hpp"
 #include <sstream>
 
 class LauncherComponent;
@@ -80,20 +81,18 @@ public:
     void hideLaunchSpinner();
 
     void deleteIcon(String,String);
-    bool isDeleteMode();
     void addIcon(const String&, const String&, const String&);
     void setColorBackground(const String&);
     void setImageBackground(const String&);
+    void setClockVisible(bool);
     
 private:
     Colour bgColor;
     Image bgImage;
     bool hasImg;
-    bool deletemode;
+    ScopedPointer<ClockMonitor> clock;
   
     void buttonClicked(Button *) override;
-    ScopedPointer<ImageButton> trashButton;
-    ScopedPointer<ImageButton> trashActivated;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LauncherComponent)
 };
