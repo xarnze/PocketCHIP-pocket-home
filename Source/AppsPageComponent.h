@@ -52,6 +52,8 @@ public:
   
   void addAndOwnIcon(const String &name, Component *icon);
   DrawableButton *createAndOwnIcon(const String &name, const String &iconPath, const String &shell);
+  
+  void removeIcon(Component*);
   virtual Array<DrawableButton *> createIconsFromJsonArray(const var &json);
   
   void buttonStateChanged(Button*) override {};
@@ -100,7 +102,7 @@ private:
   void openAppsLibrary();
   
   //Trash Icon
-  ScopedPointer<ImageButton> trashButton;  
+  ScopedPointer<ImageButton> trashButton;
   
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AppsPageComponent)
 };

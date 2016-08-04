@@ -10,6 +10,7 @@ public:
   int numRows;
   
   bool addItem(Component *item);
+  bool removeItem(Component*);
   void resized() override;
 
   Array<Component *> items;
@@ -32,9 +33,11 @@ public:
   
   void createPage();
   void addItem(Component *item);
+  void removeItem(Component*);
   bool hasPrevPage();
   bool hasNextPage();
   void showPageAtIndex(int idx);
+  void showCurrentPage();
   void showPrevPage();
   void showNextPage();
   void resized() override;

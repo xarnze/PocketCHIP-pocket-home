@@ -14,6 +14,7 @@ sudo apt-get install \
     libnm-glib-dev \
     network-manager-dev \
     libi2c-dev \
+    libssl-dev \
     libnm-gtk-dev
 ```
 

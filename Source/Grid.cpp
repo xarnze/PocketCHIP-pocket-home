@@ -25,6 +25,26 @@ bool GridPage::addItem(Component *item) {
   return true;
 }
 
+bool GridPage::removeItem(Component* item){
+  int index = items.indexOf(item);
+  if(index!=-1){
+    items.removeFirstMatchingValue(item);
+    if(index >= numCols) gridRows[1]->removeChildComponent(item);
+    else{
+      gridRows[0]->removeChildComponent(item);
+      /* As one item is missing on our first line, let's try to
+      Take one for the next line and move it up */
+      if(items.size() >= numCols){
+	Component* first = items[2];
+	gridRows[0]->addAndMakeVisible(first);
+	gridRows[1]->removeChildComponent(first);
+      }
+    }
+    return true;
+  }
+  return false;
+}
+
 void GridPage::resized() {}
 
 Grid::Grid(int numCols, int numRows) :
@@ -74,6 +94,27 @@ void Grid::addItem(Component *item) {
     createPage();
     pages.getLast()->addItem(item);
   }
+}
+
+void Grid::removeItem(Component* item){
+  //items.remove(item);
+  items.removeFirstMatchingValue(item);
+  bool wasdeleted = page->removeItem(item);
+  if(!wasdeleted) return;
+  //Getting next item
+  int index = pages.indexOf(page) + 1;
+  if(!hasNextPage() || !(pages[index]->items.size())){
+    showCurrentPage();
+    return;
+  }
+   
+  Component* newicon = pages[index]->items[0];
+  pages[index]->removeItem(newicon);
+  
+  items.add(newicon);
+  page->addItem(newicon);
+  
+  showCurrentPage();
 }
 
 void Grid::resized() {
@@ -141,6 +182,11 @@ void Grid::showPageAtIndex(int idx) {
   page->setVisible(true);
   page->setEnabled(true);
   resized();
+}
+
+void Grid::showCurrentPage(){  
+  int i = pages.indexOf(page);
+  showPageAtIndex(i);
 }
 
 void Grid::showPrevPage() {

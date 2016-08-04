@@ -335,6 +335,7 @@ void LauncherComponent::addIcon(const String& name, const String& path, const St
   AppsPageComponent* appsPage = (AppsPageComponent*) pagesByName["Apps"];
   DrawableButton* db = appsPage->createAndOwnIcon(name, path, shell);
   db->setWantsKeyboardFocus(false);
+  appsPage->grid->showCurrentPage();
   appsPage->checkShowPageNav();
 }
 
@@ -370,9 +371,12 @@ void LauncherComponent::buttonClicked(Button *button) {
   }
 }
 
-void LauncherComponent::deleteIcon(String name, String shell){
+void LauncherComponent::deleteIcon(String name, String shell, Component* button){
   SettingsPageComponent* system = (SettingsPageComponent*) pagesByName["Settings"];
   system->deleteIcon(name,shell);
-  execlp("/usr/bin/pocket-home", "/usr/bin/pocket-home", NULL);
-  perror("Error rebooting application");
+  /* Deleting graphically, without rebooting the app */
+  AppsPageComponent* appsPage = (AppsPageComponent*) pagesByName["Apps"];
+  appsPage->removeIcon(button);
+  //execlp("/usr/bin/pocket-home", "/usr/bin/pocket-home", NULL);
+  //perror("Error rebooting application");
 }

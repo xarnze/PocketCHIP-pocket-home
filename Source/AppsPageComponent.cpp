@@ -108,8 +108,12 @@ void AppListComponent::addAndOwnIcon(const String &name, Component *icon) {
   gridIcons.add(icon);
   grid->addItem(icon);
   ((Button*)icon)->addListener(this);
-  /* Temporary */
   ((Button*)icon)->addMouseListener(this, false);
+}
+
+void AppListComponent::removeIcon(Component* icon){
+  gridIcons.removeObject(icon);
+  grid->removeItem(icon);
 }
 
 Array<DrawableButton *> AppListComponent::createIconsFromJsonArray(const var &json) {
@@ -320,7 +324,7 @@ void AppsPageComponent::mouseUp(const MouseEvent& me){
                                  );
     if(answer){
         auto appButton = (AppIconButton*) button;
-        launcherComponent->deleteIcon(button->getName(), appButton->shell);
+        launcherComponent->deleteIcon(button->getName(), appButton->shell, appButton);
     }
   }
   trashButton->setVisible(false);
