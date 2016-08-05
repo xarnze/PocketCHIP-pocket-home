@@ -318,7 +318,8 @@ void AppsPageComponent::mouseDrag(const MouseEvent& me){
 
 void AppsPageComponent::mouseUp(const MouseEvent& me){
   if(!cpy) return;
-  if(cpy->getAlpha()>=0.25 && cpy->getAlpha()<=0.35){
+  bool ontrash = cpy->getAlpha()>=0.25 && cpy->getAlpha()<=0.35;
+  if(ontrash){
     //On Delete icon
     Button* button = (Button*) me.originalComponent;
     bool answer = AlertWindow::showOkCancelBox(AlertWindow::AlertIconType::WarningIcon,
@@ -335,6 +336,8 @@ void AppsPageComponent::mouseUp(const MouseEvent& me){
   trashButton->setVisible(false);
   removeChildComponent(cpy);
   cpy = nullptr;
+  if(me.getLengthOfMousePress() < 350 && !ontrash)
+    buttonClicked((Button*) me.originalComponent);
   checkShowPageNav();
 }
 
