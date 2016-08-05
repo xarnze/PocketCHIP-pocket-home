@@ -60,7 +60,12 @@ void AppListComponent::previous(){
 }
 
 DrawableButton *AppListComponent::createAndOwnIcon(const String &name, const String &iconPath, const String &shell) {
-  auto image = createImageFromFile(assetFile(iconPath));
+  File icon = assetFile(iconPath);
+  Image image;
+  if(iconPath == "" || !icon.exists())
+    image = createImageFromFile(assetFile("appIcons/default.png"));
+  else
+    image = createImageFromFile(icon);
   auto drawable = new DrawableImage();
   drawable->setImage(image);
   // FIXME: is this OwnedArray for the drawables actually necessary?
