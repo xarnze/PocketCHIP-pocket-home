@@ -102,19 +102,36 @@ void Grid::removeItem(Component* item){
   bool wasdeleted = page->removeItem(item);
   if(!wasdeleted) return;
   //Getting next item
-  int index = pages.indexOf(page) + 1;
-  if(!hasNextPage() || !(pages[index]->items.size())){
-    showCurrentPage();
-    return;
+  int index = pages.indexOf(page);
+  //items.add(newicon);
+  shiftIcons(index);
+  GridPage* last = pages.getLast();
+  /* If after shifting the last page doesn't have any icona nymore
+   * we must delete the last page */
+  if(last->items.size() == 0){
+    /* If the current page is the last, we msut switch to the previous one,
+     * else, we get a SEGFAULT */
+    if(page == last) showPageAtIndex(index-1);
+    pages.removeLast();
   }
-   
-  Component* newicon = pages[index]->items[0];
-  pages[index]->removeItem(newicon);
-  
-  items.add(newicon);
-  page->addItem(newicon);
   
   showCurrentPage();
+}
+
+/* Function used to shift the icons from one page to another
+ * After deleting an icon 
+ */
+void Grid::shiftIcons(int index){
+  int nextpage = index + 1;
+  bool hasnextpage = nextpage < pages.size() && 
+		     pages[nextpage]->items.size() != 0;
+  if(!hasnextpage) return;
+  
+  Component* newicon = pages[nextpage]->items[0];
+  pages[nextpage]->removeItem(newicon);
+  pages[index]->addItem(newicon);
+  
+  shiftIcons(nextpage);
 }
 
 void Grid::resized() {

@@ -42,6 +42,8 @@ public:
   void showNextPage();
   void resized() override;
 private:
+  void shiftIcons(int);
+
   StretchableLayoutManager rowLayout;
   StretchableLayoutManager colLayout;
   
