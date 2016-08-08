@@ -1,7 +1,7 @@
 #include "SettingsPageLogin.h"
 
 SettingsPageLogin::SettingsPageLogin() :
-root_label("RootLab", "Root password"), root_password("Root", 0x2022),
+root_label("RootLab", "Sudo password"), root_password("Root", 0x2022),
 cur_label("CurLabel", "Current password"), cur_password("Current",0x2022),
 new_label("NewLabel", "New password"), new_password("New", 0x2022),
 ret_label("ConfLabel", "Retype password"), ret_password("Confirmation", 0x2022),
