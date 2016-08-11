@@ -153,7 +153,7 @@ clock(nullptr)
 {
   /* Setting the clock */
   clock = new ClockMonitor;
-  clock->getLabel().setBounds(390, 0, 50, 50);
+  clock->getLabel().setBounds(380, 0, 50, 50);
   String displayclock = (configJson["showclock"]).toString();
   if(displayclock.length()==0 || displayclock==String("yes"))
     setClockVisible(true);
@@ -322,7 +322,7 @@ void LauncherComponent::resized() {
   
   batteryLabel->setBounds(bounds.getX()+40, bounds.getY(), 50, 50);
   
-  clock->getLabel().setBounds(bounds.getX()+390, bounds.getY(), 50, 50);
+  clock->getLabel().setBounds(bounds.getX()+380, bounds.getY(), 60, 50);
    
   // init
   if (!resize) {

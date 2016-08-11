@@ -17,11 +17,13 @@ public:
   ~ClockMonitor();
   
   void run() override;
+  void setAmMode(bool);
   Label& getLabel();
 
 private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ClockMonitor)
   char formatted[10];
+  bool ampm;
   CriticalSection lock;
   ScopedPointer<Label> clock;
 };

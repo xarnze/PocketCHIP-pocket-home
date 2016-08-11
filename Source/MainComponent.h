@@ -16,8 +16,8 @@ public:
   void resized() override;
   void paint(Graphics &) override;
   void buttonClicked(Button *button) override;
-  
   bool hasPassword();
+  void textFocus();
   
 private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LoginPage)

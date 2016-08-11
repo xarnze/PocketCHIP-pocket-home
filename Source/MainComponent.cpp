@@ -20,8 +20,9 @@ lp(new LoginPage(this))
   if(lp->hasPassword())
     addAndMakeVisible(lp);
   else
-    addAndMakeVisible(pageStack);
-    
+    addAndMakeVisible(pageStack);  
+  lp->textFocus();
+  
   launcher = new LauncherComponent(configJson);
   pageStack->pushPage(launcher, PageStackComponent::kTransitionNone);
 
@@ -83,6 +84,7 @@ log(new TextButton("login")), hashed_password("none")
   log->setBounds(140, 230, 200, 30);
   log->addListener(this);
   
+  
   addAndMakeVisible(bgImage, 1);
   addAndMakeVisible(ntcIcon, 4);
   addAndMakeVisible(cur_password, 3);
@@ -103,6 +105,11 @@ void LoginPage::displayError(){
                 "Wrong password", 
                 "Wrong password, try again",
                 "Ok");
+}
+
+void LoginPage::textFocus(){
+  cur_password->grabKeyboardFocus();
+  cur_password->setWantsKeyboardFocus(true);
 }
 
 void LoginPage::buttonClicked(Button *button){
