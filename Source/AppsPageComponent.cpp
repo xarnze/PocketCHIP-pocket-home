@@ -321,12 +321,14 @@ void AppsPageComponent::mouseDrag(const MouseEvent& me){
     cpy->setBounds(x, y, cpy->getWidth(), cpy->getHeight());
   }
   
-  if(!shouldMove)
-    shouldMove = abs(x-drag_x)>20 || abs(y-drag_y)>20;
+  shouldMove = abs(x-drag_x)>5 || abs(y-drag_y)>5;
 
-  if(shouldMove)
+  if(shouldMove){
     cpy->setBounds(drag_x, drag_y, cpy->getWidth(), cpy->getHeight());
-  
+    x = drag_x;
+    y = drag_y;
+}
+    
   if(drag_y <= 10) cpy->setAlpha(0.3);
   else cpy->setAlpha(0.9);
 }
