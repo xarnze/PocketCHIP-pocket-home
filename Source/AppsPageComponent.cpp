@@ -145,7 +145,8 @@ AppsPageComponent::AppsPageComponent(LauncherComponent* launcherComponent) :
   AppListComponent(),
   launcherComponent(launcherComponent),
   runningCheckTimer(),
-  debounceTimer()
+  debounceTimer(),
+  x(-1), y(-1), shouldMove(false)
 {
   runningCheckTimer.appsPage = this;
   debounceTimer.appsPage = this;
@@ -297,8 +298,10 @@ void AppsPageComponent::buttonStateChanged(Button* btn) {
 
 void AppsPageComponent::mouseDrag(const MouseEvent& me){
   if(me.originalComponent == this) return;
+  //Hide the "previous arrow" to show the trash
   prevPageBtn->setVisible(false);
   
+  //Get the position of the mouse relative to the Grid
   Point<int> pi = me.getPosition();
   Point<int> res = this->getLocalPoint(nullptr, me.getScreenPosition());
   if(cpy==nullptr){
@@ -311,9 +314,21 @@ void AppsPageComponent::mouseDrag(const MouseEvent& me){
   int drag_x = res.x - cpy->getWidth()/2;
   int drag_y = res.y - cpy->getHeight()/2;
   trashButton->setVisible(true);
+
+  if(x==-1 && y==-1){
+    x = drag_x;
+    y = drag_y;
+    cpy->setBounds(x, y, cpy->getWidth(), cpy->getHeight());
+  }
+  
+  if(!shouldMove)
+    shouldMove = abs(x-drag_x)>20 || abs(y-drag_y)>20;
+
+  if(shouldMove)
+    cpy->setBounds(drag_x, drag_y, cpy->getWidth(), cpy->getHeight());
+  
   if(drag_y <= 10) cpy->setAlpha(0.3);
   else cpy->setAlpha(0.9);
-  cpy->setBounds(drag_x, drag_y, cpy->getWidth(), cpy->getHeight());
 }
 
 void AppsPageComponent::mouseUp(const MouseEvent& me){
@@ -336,9 +351,13 @@ void AppsPageComponent::mouseUp(const MouseEvent& me){
   trashButton->setVisible(false);
   removeChildComponent(cpy);
   cpy = nullptr;
-  if(me.getLengthOfMousePress() < 350 && !ontrash)
+  if(me.getLengthOfMousePress() < 1000 && !ontrash)
     buttonClicked((Button*) me.originalComponent);
   checkShowPageNav();
+  //Setting back "old values" to -1
+  x = -1;
+  y = -1;
+  shouldMove = false;
 }
 
 void AppsPageComponent::buttonClicked(Button *button) {

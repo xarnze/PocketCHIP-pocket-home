@@ -105,6 +105,11 @@ private:
   ScopedPointer<ImageButton> trashButton;
   
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AppsPageComponent)
+  
+  //Store mouse dragged event X and Y
+  int x;
+  int y;
+  bool shouldMove;
 };
 
 class NavigationListener : public Button::Listener {
