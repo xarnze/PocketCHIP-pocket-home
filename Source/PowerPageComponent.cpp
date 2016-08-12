@@ -31,6 +31,10 @@ PowerPageComponent::PowerPageComponent() {
   
   felPage = new PowerFelPageComponent();
   
+  //Setting up the lockscreen
+  auto lambda = [this](){ this->hideLockscreen(); };
+  lockscreen = new LoginPage(lambda);
+  
   // create back button
   backButton = createImageButton(
       "Back", createImageFromFile(assetFile("nextIcon.png")));
@@ -117,6 +121,10 @@ PowerPageComponent::PowerPageComponent() {
 
 PowerPageComponent::~PowerPageComponent() {}
 
+void PowerPageComponent::hideLockscreen(){
+    removeChildComponent(lockscreen);
+}
+
 void PowerPageComponent::paint(Graphics &g) {
     auto bounds = getLocalBounds();
     g.fillAll(bgColor);
@@ -171,6 +179,9 @@ void PowerPageComponent::setSleep() {
             child.start("xset dpms force on");
         } else {
             child.start("xset dpms force off" );
+            lockscreen->hasPassword();
+            addAndMakeVisible(lockscreen);
+            lockscreen->setAlwaysOnTop(true);
         }
     }
   #endif

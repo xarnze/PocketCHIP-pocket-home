@@ -7,12 +7,14 @@
 #include <sys/types.h>
 #include <fcntl.h>
 
-MainContentComponent::MainContentComponent(const var &configJson):
-lp(new LoginPage(this))
+MainContentComponent::MainContentComponent(const var &configJson)
 {
   lookAndFeel = new PokeLookAndFeel();
   setLookAndFeel(lookAndFeel);
 
+  //Function to execute when the login button is pressed on login page
+  auto function = [this] () { this->loggedIn(); };
+  lp = new LoginPage(function);
   LookAndFeel::setDefaultLookAndFeel(lookAndFeel);
 
   pageStack = new PageStackComponent();
@@ -59,17 +61,19 @@ bool LoginPage::hasPassword(){
     content = content.removeCharacters("\n");
     if(content==String("none")) return false;
     else hashed_password = content;
+    haspassword = true;
     return true;
   }
   return false;
 }
 
-LoginPage::LoginPage(MainContentComponent* mcc):
-main_page(mcc), bgImage(new DrawableImage),
+LoginPage::LoginPage(std::function<void(void)> lambda):
+bgImage(new DrawableImage),
 ntcIcon(new DrawableImage),
 cur_password(new TextEditor("field_password", 0x2022)),
 label_password(new Label("pass", "Password :")),
-log(new TextButton("login")), hashed_password("none")
+log(new TextButton("login")), hashed_password("none"),
+functiontoexecute(lambda), haspassword(false)
 {
   this->setBounds(0, 0, 480, 272);
   Image bg = createImageFromFile(assetFile("login/background.png"));
@@ -84,11 +88,14 @@ log(new TextButton("login")), hashed_password("none")
   log->setBounds(140, 230, 200, 30);
   log->addListener(this);
   
+  this->hasPassword();
   
   addAndMakeVisible(bgImage, 1);
   addAndMakeVisible(ntcIcon, 4);
-  addAndMakeVisible(cur_password, 3);
-  addAndMakeVisible(label_password, 2);
+  if(haspassword){
+    addAndMakeVisible(cur_password, 3);
+    addAndMakeVisible(label_password, 2);
+  }
   addAndMakeVisible(log, 3);
 }
 
@@ -115,8 +122,8 @@ void LoginPage::textFocus(){
 void LoginPage::buttonClicked(Button *button){
   String pass_tmp = cur_password->getText();
   String hashed = SettingsPageLogin::hashString(pass_tmp);
-  if(hashed == hashed_password)
-    main_page->loggedIn();
+  if(hashed_password=="none" || hashed == hashed_password)
+      functiontoexecute();
   else displayError();
 }
 

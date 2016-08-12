@@ -315,20 +315,29 @@ void AppsPageComponent::mouseDrag(const MouseEvent& me){
   int drag_y = res.y - cpy->getHeight()/2;
   trashButton->setVisible(true);
 
+  //x==-1 means this is the first first the function is called
+  //So a new icon has just been pressed
   if(x==-1 && y==-1){
     x = drag_x;
     y = drag_y;
+    //We draw the dragging icon at this coordinates
     cpy->setBounds(x, y, cpy->getWidth(), cpy->getHeight());
   }
   
+  //The icon should move only if it has been dragged more than 5 pixels
   shouldMove = abs(x-drag_x)>5 || abs(y-drag_y)>5;
 
+  //Should it move ?
   if(shouldMove){
+    //Let's move it !
     cpy->setBounds(drag_x, drag_y, cpy->getWidth(), cpy->getHeight());
     x = drag_x;
     y = drag_y;
-}
-    
+  }
+  
+  /* If the mouse is on the top of the screen (less than 10px)
+   * The icon because more transparent
+   */
   if(drag_y <= 10) cpy->setAlpha(0.3);
   else cpy->setAlpha(0.9);
 }

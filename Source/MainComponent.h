@@ -10,20 +10,21 @@ class MainContentComponent;
 
 class LoginPage : public Component, public Button::Listener{
 public:
-  LoginPage(MainContentComponent*);
+  LoginPage(std::function<void(void)>);
   ~LoginPage();
   
-  void resized() override;
-  void paint(Graphics &) override;
-  void buttonClicked(Button *button) override;
-  bool hasPassword();
-  void textFocus();
+  virtual void resized() override;
+  virtual void paint(Graphics &) override;
+  virtual void buttonClicked(Button *button) override;
+  virtual bool hasPassword();
+  virtual void textFocus();
   
 private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LoginPage)
   void displayError();
   
-  MainContentComponent* main_page;
+  std::function<void(void)> functiontoexecute;
+  bool haspassword;
   ScopedPointer<TextButton> log;
   ScopedPointer<Label> label_password;
   String hashed_password;

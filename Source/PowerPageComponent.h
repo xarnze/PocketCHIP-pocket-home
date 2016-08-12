@@ -7,6 +7,7 @@
 #include "PageStackComponent.h"
 
 class PowerPageComponent;
+class LoginPage;
 
 class PowerSpinnerTimer : public Timer {
 public:
@@ -31,6 +32,8 @@ public:
     ScopedPointer<Component> mainPage;
     ScopedPointer<ImageComponent> powerSpinner;
     ScopedPointer<AlertWindow> updateWindow;
+    //Lockscreen to display when the screen goes sleeping
+    ScopedPointer<LoginPage> lockscreen;
     
     PowerSpinnerTimer powerSpinnerTimer;
     Array<Image> launchSpinnerImages;
@@ -50,6 +53,7 @@ public:
   void buttonStateChanged(Button*) override;
   void buttonClicked(Button*) override;
   void setSleep();
+  void hideLockscreen();
   
   static unsigned char rev_number;
   static unsigned char bug_number;
