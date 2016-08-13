@@ -34,7 +34,7 @@ public:
 
 class AppListComponent : public Component, public Button::Listener{
 public:
-  AppListComponent();
+  AppListComponent(Component* parent = nullptr);
   ~AppListComponent();
   
   ScopedPointer<Grid> grid;

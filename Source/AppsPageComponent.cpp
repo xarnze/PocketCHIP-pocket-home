@@ -32,18 +32,20 @@ Rectangle<float> AppIconButton::getImageBounds() const {
   return bounds.withHeight(PokeLookAndFeel::getDrawableButtonImageHeightForBounds(bounds)).toFloat();
 }
 
-AppListComponent::AppListComponent() :
+AppListComponent::AppListComponent(Component* parent) :
   grid(new Grid(3, 2)),
   nextPageBtn(createImageButton("NextAppsPage",
-                                ImageFileFormat::loadFrom(assetFile("pageDownIcon.png")))),
+                                ImageFileFormat::loadFrom(assetFile("nextIcon.png")))),
   prevPageBtn(createImageButton("PrevAppsPage",
-                                ImageFileFormat::loadFrom(assetFile("pageUpIcon.png"))))
+                                ImageFileFormat::loadFrom(assetFile("backIcon.png"))))
 {
-  addChildComponent(nextPageBtn);
-  addChildComponent(prevPageBtn);
+  if(!parent) parent = this;
+  parent->addChildComponent(nextPageBtn);
+  parent->addChildComponent(prevPageBtn, 500);
   NavigationListener* list = new NavigationListener(nextPageBtn, this);
   nextPageBtn->addListener(list);
   prevPageBtn->addListener(list);
+  prevPageBtn->setAlwaysOnTop(true);
   
   addAndMakeVisible(grid);
 }
@@ -82,8 +84,8 @@ void AppListComponent::resized() {
   
   prevPageBtn->setSize(btnHeight, btnHeight);
   nextPageBtn->setSize(btnHeight, btnHeight);
-  prevPageBtn->setBoundsToFit(b.getX(), b.getY(), b.getWidth(), b.getHeight(), Justification::centredTop, true);
-  nextPageBtn->setBoundsToFit(b.getX(), b.getY(), b.getWidth(), b.getHeight(), Justification::centredBottom, true);
+  prevPageBtn->setBoundsToFit(b.getX(), b.getY(), b.getWidth(), b.getHeight(), Justification::centredLeft, true);
+  nextPageBtn->setBoundsToFit(b.getX(), b.getY(), 480, b.getHeight(), Justification::centredRight, true);
   
   // drop the page buttons from our available layout size
   auto gridWidth = b.getWidth();
@@ -142,7 +144,7 @@ Array<DrawableButton *> AppListComponent::createIconsFromJsonArray(const var &js
 }
 
 AppsPageComponent::AppsPageComponent(LauncherComponent* launcherComponent) :
-  AppListComponent(),
+  AppListComponent(launcherComponent),
   launcherComponent(launcherComponent),
   runningCheckTimer(),
   debounceTimer(),
