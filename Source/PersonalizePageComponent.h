@@ -22,6 +22,7 @@ public:
   
 private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PersonalizePageComponent)
+  
   void updateFile(bool);
   bool updateJSON();
   void updateComboBox();
@@ -50,6 +51,7 @@ private:
   ComboBox choose_back;
   TextButton add_btn;
   TextButton browse;
+  TextButton browseicon;
   
   TextButton apply;
   TextEditor edit_back;

@@ -7,7 +7,8 @@ background("lab_back","Background"), icons("lab_icons","Icons management"), opt_
 opt_name("opt_name", "Name:"), opt_img("opt_img", "Icon path:"), opt_shell("opt_shell", "Command:"),
 add_btn("Add"), apply("Apply"), choose_back("back_box"), edit_back("back_field"),
 edit_name("name"), edit_icn("icn"), edit_shell("shell"), config(assetConfigFile("config.json")),
-json(JSON::parse(config)), success("suc", "Success !"), browse("...")
+json(JSON::parse(config)), success("suc", "Success !"), browse("..."),
+browseicon("...")
 {
   bgColor = Colour(0xffd23c6d);
   bgImage = createImageFromFile(assetFile("settingsBackground.png"));
@@ -48,11 +49,14 @@ json(JSON::parse(config)), success("suc", "Success !"), browse("...")
   addAndMakeVisible(edit_icn);
   addAndMakeVisible(edit_shell);
   addAndMakeVisible(browse);
+  addAndMakeVisible(browseicon);
   
   browse.addListener(this);
+  browseicon.addListener(this);
   showAddComponents(false);
   success.setVisible(false);
   browse.setVisible(false);
+  browseicon.setVisible(false);
   
   /* Create back button */
   backButton = createImageButton("Back", createImageFromFile(assetFile("backIcon.png")));
@@ -123,6 +127,10 @@ void PersonalizePageComponent::resized(){
     if(i==2) size = 304;
     labels[i]->setBounds(x, y, t_width, btn_height);
     fields[i]->setBounds(x+t_width+5, y, size, btn_height);
+    //If i==1, we are putting the icon path field
+    if(i==1)
+      browseicon.setBounds(x+t_width+size-25, y, 30, btn_height);
+    
     if(i==0) x += t_width+size+15;
     else{
       x = bounds.getX()+70;
@@ -165,9 +173,31 @@ void PersonalizePageComponent::buttonClicked(Button* button){
                                     false,
                                     Colours::lightgrey);
     if(dialogBox.show(480,272)){
-      File selectedFile = browser.getSelectedFile (0);
+      File selectedFile = browser.getSelectedFile(0);
       String path = selectedFile.getFullPathName();
       edit_back.setText(path);
+    }
+  }
+  else if(button == &browseicon){
+    WildcardFileFilter wildcardFilter ("*.png", 
+                                       String::empty,
+                                       "Image files");
+
+    FileBrowserComponent browser (FileBrowserComponent::canSelectFiles |
+                                  FileBrowserComponent::openMode,
+                                  File::nonexistent,
+                                  &wildcardFilter,
+                                  nullptr);
+
+    FileChooserDialogBox dialogBox ("Choose the icon",
+                                    "Please choose your png icon (ideal size : 90x70 px)",
+                                    browser,
+                                    false,
+                                    Colours::lightgrey);
+    if(dialogBox.show(480,272)){
+      File selectedFile = browser.getSelectedFile(0);
+      String path = selectedFile.getFullPathName();
+      edit_icn.setText(path);
     }
   }
 }
@@ -179,6 +209,7 @@ void PersonalizePageComponent::showAddComponents(bool show){
   edit_name.setVisible(show);
   edit_icn.setVisible(show);
   edit_shell.setVisible(show);
+  browseicon.setVisible(show);
 }
 
 void PersonalizePageComponent::comboBoxChanged(ComboBox* box){
