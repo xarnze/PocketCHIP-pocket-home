@@ -300,6 +300,7 @@ void AppsPageComponent::buttonStateChanged(Button* btn) {
 
 void AppsPageComponent::mouseDrag(const MouseEvent& me){
   if(me.originalComponent == this) return;
+  launcherComponent->setIpVisible(false);
   
   //Get the position of the mouse relative to the Grid
   Point<int> pi = me.getPosition();
@@ -364,7 +365,7 @@ void AppsPageComponent::mouseUp(const MouseEvent& me){
   cpy = nullptr;
   if(me.getLengthOfMousePress() < 1000 && !ontrash)
     buttonClicked((Button*) me.originalComponent);
-  checkShowPageNav();
+  launcherComponent->setIpVisible(true);
   //Setting back "old values" to -1
   x = -1;
   y = -1;
