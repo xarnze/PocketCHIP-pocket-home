@@ -299,7 +299,8 @@ void AppsPageComponent::buttonStateChanged(Button* btn) {
 }
 
 void AppsPageComponent::mouseDrag(const MouseEvent& me){
-  if(me.originalComponent == this) return;
+  if(me.originalComponent == this ||
+     me.getLengthOfMousePress() < 500) return;
   launcherComponent->setIpVisible(false);
   
   //Get the position of the mouse relative to the Grid

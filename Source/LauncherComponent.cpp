@@ -153,7 +153,7 @@ void LauncherComponent::setClockVisible(bool visible){
 }
 
 LauncherComponent::LauncherComponent(const var &configJson) :
-clock(nullptr), labelip("ip", "IP: ")
+clock(nullptr), labelip("ip", "")
 {
   /* Ip settings */
   addChildComponent(labelip);
