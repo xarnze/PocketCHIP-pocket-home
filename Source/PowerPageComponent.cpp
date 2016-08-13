@@ -178,10 +178,10 @@ void PowerPageComponent::setSleep() {
         if( result == "Monitor is Off") {
             child.start("xset dpms force on");
         } else {
-            child.start("xset dpms force off" );
             lockscreen->hasPassword();
             addAndMakeVisible(lockscreen);
             lockscreen->setAlwaysOnTop(true);
+            child.start("xset dpms force off" );
         }
     }
   #endif
