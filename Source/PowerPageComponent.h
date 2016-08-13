@@ -32,8 +32,6 @@ public:
     ScopedPointer<Component> mainPage;
     ScopedPointer<ImageComponent> powerSpinner;
     ScopedPointer<AlertWindow> updateWindow;
-    //Lockscreen to display when the screen goes sleeping
-    ScopedPointer<LoginPage> lockscreen;
     
     PowerSpinnerTimer powerSpinnerTimer;
     Array<Image> launchSpinnerImages;
@@ -64,5 +62,8 @@ private:
   Image bgImage;
   String bgImagePath;
   ChildProcess child;
+
+  //Lockscreen to display when the screen goes sleeping
+  ScopedPointer<LoginPage> lockscreen;
 };
 

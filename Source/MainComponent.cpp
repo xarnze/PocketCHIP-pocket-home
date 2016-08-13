@@ -53,6 +53,8 @@ void MainContentComponent::handleMainWindowInactive() {
 }
 
 bool LoginPage::hasPassword(){
+  label_password->setVisible(false);
+  cur_password->setVisible(false);
   char* home_str = getenv("HOME");
   String home(home_str);
   File passwd(home+"/.pocket-home/.passwd/passwd");
@@ -62,6 +64,8 @@ bool LoginPage::hasPassword(){
     if(content==String("none")) return false;
     else hashed_password = content;
     haspassword = true;
+    label_password->setVisible(true);
+    cur_password->setVisible(true);
     return true;
   }
   return false;
@@ -92,9 +96,12 @@ functiontoexecute(lambda), haspassword(false)
   
   addAndMakeVisible(bgImage, 1);
   addAndMakeVisible(ntcIcon, 4);
-  if(haspassword){
-    addAndMakeVisible(cur_password, 3);
-    addAndMakeVisible(label_password, 2);
+  addAndMakeVisible(cur_password, 3);
+  addAndMakeVisible(label_password, 2);
+  
+  if(!haspassword){
+      cur_password->setVisible(false);
+      label_password->setVisible(false);
   }
   addAndMakeVisible(log, 3);
 }
@@ -122,8 +129,10 @@ void LoginPage::textFocus(){
 void LoginPage::buttonClicked(Button *button){
   String pass_tmp = cur_password->getText();
   String hashed = SettingsPageLogin::hashString(pass_tmp);
-  if(hashed_password=="none" || hashed == hashed_password)
+  if(hashed_password=="none" || hashed == hashed_password){
+      cur_password->setText("");
       functiontoexecute();
+  }
   else displayError();
 }
 
