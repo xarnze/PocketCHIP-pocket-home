@@ -331,10 +331,8 @@ void LauncherComponent::resized() {
   batteryLabel->setBounds(bounds.getX()+40, bounds.getY(), 50, 50);
   
   clock->getLabel().setBounds(bounds.getX()+380, bounds.getY(), 60, 50);
-   
-  labelip.setBoundsToFit(bounds.getX(), bounds.getY(),
-                   bounds.getWidth(), bounds.getHeight(),
-                   Justification::centredTop, false);
+
+  labelip.setBounds(bounds.getX()+190, bounds.getY(), 100, 50);
   // init
   if (!resize) {
     resize = true;
@@ -348,9 +346,10 @@ void LauncherComponent::updateIp(){
 
   //This will helpus getting the IPv4 associated with wlan0 interface
   struct ifreq ifr;
+  memset(&ifr, 0, sizeof(ifr));
   ifr.ifr_addr.sa_family = AF_INET;
   //Copying the string "wlan0" in the structure
-  snprintf(ifr.ifr_name, IFNAMSIZ-1, "wlan0");
+  sprintf(ifr.ifr_name, "wlan0");
   //Getting the informations of the socket, so IP address
   ioctl(fd, SIOCGIFADDR, &ifr);
   //Close the (unused) socket
