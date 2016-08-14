@@ -9,6 +9,13 @@
 #include "ClockMonitor.hpp"
 #include <sstream>
 
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <netinet/in.h>
+#include <net/if.h>
+#include <arpa/inet.h>
+
 class LauncherComponent;
 class LibraryPageComponent;
 class AppsPageComponent;
@@ -75,6 +82,8 @@ public:
     
     void paint(Graphics &) override;
     void resized() override;
+    void updateIp();
+    void hideIp();
   
     void showAppsLibrary();
     void showLaunchSpinner();
@@ -88,6 +97,7 @@ public:
     
 private:
     Colour bgColor;
+    Label labelip;
     Image bgImage;
     bool hasImg;
     ScopedPointer<ClockMonitor> clock;

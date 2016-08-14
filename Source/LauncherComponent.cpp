@@ -89,6 +89,8 @@ void WifiIconTimer::timerCallback() {
       
       // wifi on and connected
       if (getWifiStatus().isConnected() && conAp) {
+        //Get IP and show it  
+        launcherComponent->updateIp();
         // 0 to 100
         float sigStrength = std::max(0, std::min(99, conAp->signalStrength));
         // don't include the wifi-off icon as a bin
@@ -100,10 +102,12 @@ void WifiIconTimer::timerCallback() {
       // wifi on but no connection
       else if (getWifiStatus().isEnabled()) {
         wifiIcon = launcherComponent->wifiIconImages[0];
+        launcherComponent->hideIp();
       }
       // wifi off
       else {
         wifiIcon = launcherComponent->wifiIconImages.getLast();
+        launcherComponent->hideIp();
       }
       
       button->setImages(false, false, true,
@@ -149,8 +153,12 @@ void LauncherComponent::setClockVisible(bool visible){
 }
 
 LauncherComponent::LauncherComponent(const var &configJson) :
-clock(nullptr)
+clock(nullptr), labelip("ip", "IP: ")
 {
+  /* Ip settings */
+  addChildComponent(labelip);
+  labelip.setVisible(false);
+
   /* Setting the clock */
   clock = new ClockMonitor;
   clock->getLabel().setBounds(380, 0, 50, 50);
@@ -324,11 +332,43 @@ void LauncherComponent::resized() {
   
   clock->getLabel().setBounds(bounds.getX()+380, bounds.getY(), 60, 50);
    
+  labelip.setBoundsToFit(bounds.getX(), bounds.getY(),
+                   bounds.getWidth(), bounds.getHeight(),
+                   Justification::centredTop, false);
   // init
   if (!resize) {
     resize = true;
     pageStack->swapPage(defaultPage, PageStackComponent::kTransitionNone);
   }
+}
+
+void LauncherComponent::updateIp(){
+  //Creating a socket
+  int fd = socket(AF_INET, SOCK_DGRAM, 0);
+
+  //This will helpus getting the IPv4 associated with wlan0 interface
+  struct ifreq ifr;
+  ifr.ifr_addr.sa_family = AF_INET;
+  //Copying the string "wlan0" in the structure
+  snprintf(ifr.ifr_name, IFNAMSIZ-1, "wlan0");
+  //Getting the informations of the socket, so IP address
+  ioctl(fd, SIOCGIFADDR, &ifr);
+  //Close the (unused) socket
+  close(fd);
+
+  char* addr = inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr);
+  String ip(addr);
+  //Showing the new ip if different than 0.0.0.0
+  if(addr == "0.0.0.0"){
+      labelip.setVisible(false);
+      return;
+  }
+  labelip.setText("IP: "+ip, dontSendNotification);
+  labelip.setVisible(true);
+}
+
+void LauncherComponent::hideIp(){
+    labelip.setVisible(true);
 }
 
 void LauncherComponent::addIcon(const String& name, const String& path, const String& shell){
