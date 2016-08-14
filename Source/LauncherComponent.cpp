@@ -102,12 +102,12 @@ void WifiIconTimer::timerCallback() {
       // wifi on but no connection
       else if (getWifiStatus().isEnabled()) {
         wifiIcon = launcherComponent->wifiIconImages[0];
-        launcherComponent->hideIp();
+        launcherComponent->setIpVisible(false);
       }
       // wifi off
       else {
         wifiIcon = launcherComponent->wifiIconImages.getLast();
-        launcherComponent->hideIp();
+        launcherComponent->setIpVisible(false);
       }
       
       button->setImages(false, false, true,
@@ -367,8 +367,8 @@ void LauncherComponent::updateIp(){
   labelip.setVisible(true);
 }
 
-void LauncherComponent::hideIp(){
-    labelip.setVisible(true);
+void LauncherComponent::setIpVisible(bool v){
+  labelip.setVisible(v);
 }
 
 void LauncherComponent::addIcon(const String& name, const String& path, const String& shell){

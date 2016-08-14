@@ -83,7 +83,7 @@ public:
     void paint(Graphics &) override;
     void resized() override;
     void updateIp();
-    void hideIp();
+    void setIpVisible(bool);
   
     void showAppsLibrary();
     void showLaunchSpinner();

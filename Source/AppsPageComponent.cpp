@@ -300,8 +300,6 @@ void AppsPageComponent::buttonStateChanged(Button* btn) {
 
 void AppsPageComponent::mouseDrag(const MouseEvent& me){
   if(me.originalComponent == this) return;
-  //Hide the "previous arrow" to show the trash
-  prevPageBtn->setVisible(false);
   
   //Get the position of the mouse relative to the Grid
   Point<int> pi = me.getPosition();
