@@ -157,7 +157,7 @@ void PersonalizePageComponent::buttonClicked(Button* button){
     showAddComponents(true);
   }
   else if(button == &browse){
-    WildcardFileFilter wildcardFilter ("*.png", 
+    WildcardFileFilter wildcardFilter ("*.png;*.jpg;*.jpeg", 
                                        String::empty,
                                        "Image files");
 
@@ -179,7 +179,7 @@ void PersonalizePageComponent::buttonClicked(Button* button){
     }
   }
   else if(button == &browseicon){
-    WildcardFileFilter wildcardFilter ("*.png", 
+    WildcardFileFilter wildcardFilter ("*.png;*.jpg;*.jpeg", 
                                        String::empty,
                                        "Image files");
 
