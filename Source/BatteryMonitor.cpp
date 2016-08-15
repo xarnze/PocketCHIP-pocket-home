@@ -21,11 +21,21 @@ const BatteryStatus& BatteryMonitor::getCurrentStatus( ) {
 }
 
 void BatteryMonitor::updateStatus() {
-  if( chargingFile.exists() ) {
+  /*if( chargingFile.exists() ) {
     auto chargingValue = chargingFile.loadFileAsString();
     status.isCharging = chargingValue.getIntValue();
     //if(status.isCharging != 0) status.isCharging = 1;
-  }
+  }*/
+  
+  //Now, we use i2cget to get the battery status (Charging or not)
+  String command = "/usr/sbin/i2cget -y -f 0 0x34 0x00";
+  ChildProcess stat;
+  stat.start(command);
+  stat.waitForProcessToFinish(5000);
+  String strstatus = stat.readAllProcessOutput();
+  strstatus = strstatus.trim();
+  int value = std::stoul(strstatus.toRawUTF8(), nullptr, 16);
+  status.isCharging = (value != 0);
   
   //Now, we use i2cget to get the battery percentage, it's more accurate
   String cmd = "/usr/sbin/i2cget -y -f 0 0x34 0x0b9";
