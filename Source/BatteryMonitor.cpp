@@ -31,8 +31,10 @@ void BatteryMonitor::updateStatus() {
   String command = "/usr/sbin/i2cget -y -f 0 0x34 0x00";
   ChildProcess stat;
   stat.start(command);
-  stat.waitForProcessToFinish(5000);
+  stat.waitForProcessToFinish(10);
   String strstatus = stat.readAllProcessOutput();
+  //We need to get the exit status to avoid having a defunct process
+  stat.getExitCode();
   strstatus = strstatus.trim();
   int value = std::stoul(strstatus.toRawUTF8(), nullptr, 16);
   status.isCharging = (value != 0);
@@ -41,8 +43,10 @@ void BatteryMonitor::updateStatus() {
   String cmd = "/usr/sbin/i2cget -y -f 0 0x34 0x0b9";
   ChildProcess perc;
   perc.start(cmd);
-  perc.waitForProcessToFinish(5000);
+  perc.waitForProcessToFinish(10);
   String strpercentage = perc.readAllProcessOutput();
+  //We need to get the exit status to avoid having a defunct process
+  perc.getExitCode();
   strpercentage = strpercentage.trim();
   int x = std::stoul(strpercentage.toRawUTF8(), nullptr, 16);
   
