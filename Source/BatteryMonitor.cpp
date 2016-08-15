@@ -31,7 +31,7 @@ void BatteryMonitor::updateStatus() {
   String command = "/usr/sbin/i2cget -y -f 0 0x34 0x00";
   ChildProcess stat;
   stat.start(command);
-  stat.waitForProcessToFinish(10);
+  stat.waitForProcessToFinish(2);
   String strstatus = stat.readAllProcessOutput();
   //We need to get the exit status to avoid having a defunct process
   stat.getExitCode();
@@ -43,7 +43,7 @@ void BatteryMonitor::updateStatus() {
   String cmd = "/usr/sbin/i2cget -y -f 0 0x34 0x0b9";
   ChildProcess perc;
   perc.start(cmd);
-  perc.waitForProcessToFinish(10);
+  perc.waitForProcessToFinish(2);
   String strpercentage = perc.readAllProcessOutput();
   //We need to get the exit status to avoid having a defunct process
   perc.getExitCode();
