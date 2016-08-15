@@ -3,6 +3,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
 #include "Utils.h"
+#include <string>
 
 struct BatteryStatus {
   int percentage;
