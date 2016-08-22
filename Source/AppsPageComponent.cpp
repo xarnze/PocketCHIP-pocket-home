@@ -344,12 +344,7 @@ void AppsPageComponent::mouseDrag(const MouseEvent& me){
   else cpy->setAlpha(0.9);
 }
 
-void AppsPageComponent::mouseUp(const MouseEvent& me){
-  if(!cpy) return;
-  bool ontrash = cpy->getAlpha()>=0.25 && cpy->getAlpha()<=0.35;
-  if(ontrash){
-    //On Delete icon
-    Button* button = (Button*) me.originalComponent;
+void AppsPageComponent::onTrash(Button* button){
     bool answer = AlertWindow::showOkCancelBox(AlertWindow::AlertIconType::WarningIcon,
                                   "Delete icon ?", 
                                   "Are you sure you want to delete "+button->getName()+" ?",
@@ -360,6 +355,15 @@ void AppsPageComponent::mouseUp(const MouseEvent& me){
         auto appButton = (AppIconButton*) button;
         launcherComponent->deleteIcon(button->getName(), appButton->shell, appButton);
     }
+}
+
+void AppsPageComponent::mouseUp(const MouseEvent& me){
+  if(!cpy) return;
+  bool ontrash = cpy->getAlpha()>=0.25 && cpy->getAlpha()<=0.35;
+  if(ontrash){
+    //On Delete icon
+    Button* button = (Button*) me.originalComponent;
+    onTrash(button);
   }
   trashButton->setVisible(false);
   removeChildComponent(cpy);
@@ -373,7 +377,32 @@ void AppsPageComponent::mouseUp(const MouseEvent& me){
   shouldMove = false;
 }
 
+void AppsPageComponent::manageChoice(AppIconButton* icon, int choice){
+  EditWindow* ew;
+  switch(choice){
+    case EDIT:
+      /*ew = new EditWindow(icon);
+      addAndMakeVisible(ew);
+      ew->invoke();*/
+      break;
+      
+    case MOVELEFT:
+      break;
+      
+    case MOVERIGHT:
+      break;
+      
+    case DELETE:
+      onTrash(icon);
+      break;
+      
+    default:
+      break;
+  }
+}
+
 void AppsPageComponent::buttonClicked(Button *button) {
+  ModifierKeys mk = ModifierKeys::getCurrentModifiers ();
   if (button == prevPageBtn) {
     grid->showPrevPage();
     checkShowPageNav();
@@ -385,9 +414,19 @@ void AppsPageComponent::buttonClicked(Button *button) {
   else if (button == appsLibraryBtn) {
     openAppsLibrary();
   }
-  else {
-    /*ModifierKeys mk = ModifierKeys::getCurrentModifiers ();
-    if(mk==ModifierKeys::ctrlModifier);*/
+  else if (mk==ModifierKeys::ctrlModifier){
+    //Control key was pressed
+    PopupMenu pop;
+    pop.addItem(EDIT, "Edit");
+    pop.addItem(MOVELEFT, "Move left");
+    pop.addItem(MOVERIGHT, "Move right");
+    pop.addItem(DELETE, "Delete");
+    int choice = pop.show();
+    //If nothing has been selected then... do nothing
+    if(!choice) return;
+    manageChoice((AppIconButton*) button, choice);
+  }
+  else{
     auto appButton = (AppIconButton*)button;
     startOrFocusApp(appButton);
   }
@@ -398,4 +437,45 @@ NavigationListener::NavigationListener(Button* next, AppListComponent* p): next(
 void NavigationListener::buttonClicked(Button *button){
     if(button==next) page->next();
     else page->previous();
+}
+
+EditWindow::EditWindow(AppIconButton* button): button(button),
+apply("Apply", "Apply"), cancel("Cancel"), choice(0)
+{
+  
+  apply.addListener(this);
+  cancel.addListener(this);
+  
+  int size = 350;
+  int gap = 30;
+  this->setBounds(0, 30, size, 212);
+  
+  apply.setBounds(gap, 172, (size-150)/2, 30);
+  cancel.setBounds(2*gap+(size/2), 172, (size-150)/2, 30);
+  
+  addAndMakeVisible(apply);
+  addAndMakeVisible(cancel); 
+}
+
+EditWindow::~EditWindow(){ }
+
+void EditWindow::paint(Graphics &g){
+  g.fillAll(Colours::white);
+}
+
+void EditWindow::buttonClicked(Button* button){
+  if(button == &apply){
+    choice = true;
+  }
+  else{
+    choice = false;
+  }
+}
+
+void EditWindow::resized(){
+  auto bounds = this->getBounds();
+}
+
+bool EditWindow::invoke(){
+  this->setVisible(true);
 }
