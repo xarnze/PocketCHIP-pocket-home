@@ -37,6 +37,16 @@ BluetoothStatus &getBluetoothStatus() {
   return PokeLaunchApplication::get()->bluetoothStatus;
 }
 
+File getConfigFile(){
+    static File configfile = assetConfigFile("config.json");
+    return  configfile;
+}
+
+var getConfigJSON(){
+    static var configjson = JSON::parse(getConfigFile());
+    return configjson;
+}
+
 PokeLaunchApplication::PokeLaunchApplication() {}
 
 PokeLaunchApplication *PokeLaunchApplication::get() {
