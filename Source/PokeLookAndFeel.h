@@ -35,6 +35,8 @@ public:
 
   MouseCursor getMouseCursorFor(Component &component) override;
   
+  virtual void setCursorVisible(bool);
+  
   static Colour lightGrey;
   static Colour medGrey;
   static Colour chipPink;
@@ -43,4 +45,5 @@ public:
 
 private:
   Typeface::Ptr seguibl;
+  MouseCursor::StandardCursorType cursor;
 };

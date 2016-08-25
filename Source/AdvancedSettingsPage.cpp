@@ -6,8 +6,10 @@ title("settings", "Advanced Settings"),
 addLogin("Change your password"), 
 removeLogin("Remove your password"),
 personalizeButton("Personalize your homepage"),
+dateandtime("Date and time"),
 spl(new SettingsPageLogin),
-ppc(new PersonalizePageComponent(lc))
+ppc(new PersonalizePageComponent(lc)),
+index(0)
 {
   //Title font
   title.setFont(Font(27.f));
@@ -20,11 +22,19 @@ ppc(new PersonalizePageComponent(lc))
   addLogin.addListener(this);
   removeLogin.addListener(this);
   personalizeButton.addListener(this);
+  dateandtime.addListener(this);
   addAndMakeVisible(title);
   addAndMakeVisible(backButton);
   addAndMakeVisible(addLogin);
   addAndMakeVisible(removeLogin);
   addAndMakeVisible(personalizeButton);
+  addAndMakeVisible(dateandtime);
+  
+  //Adding to our buttons
+  allbuttons.push_back(&personalizeButton);
+  allbuttons.push_back(&addLogin);
+  allbuttons.push_back(&removeLogin);
+  allbuttons.push_back(&dateandtime);
 }
 
 AdvancedSettingsPage::~AdvancedSettingsPage(){ }
@@ -32,15 +42,14 @@ AdvancedSettingsPage::~AdvancedSettingsPage(){ }
 void AdvancedSettingsPage::resized(){
   auto bounds = getLocalBounds();
   int btn_height = 30;
-  int btn_width = 370;
+  int btn_width = 345;
   
   backButton->setBounds(bounds.getX(), bounds.getY(), 60, bounds.getHeight());
-  title.setBounds(bounds.getX()+160, bounds.getY()+10, btn_width, btn_height);
+  title.setBounds(bounds.getX()+150, bounds.getY()+10, btn_width, btn_height);
   
-  TextButton* buttons[] = {&personalizeButton, &addLogin, &removeLogin};
-  int y = 75;
-  for(int i=0; i < 3; i++){
-    buttons[i]->setBounds(bounds.getX()+70, bounds.getY()+y, btn_width, btn_height);
+  int y = 50;
+  for(int i=index; i < allbuttons.size() && i < index+4; i++){
+    allbuttons[i]->setBounds(bounds.getX()+70, bounds.getY()+y, btn_width, btn_height);
     y += 50;
   }
 }
@@ -69,7 +78,7 @@ void AdvancedSettingsPage::buttonClicked(Button* button){
       getMainStack().pushPage(spl, PageStackComponent::kTransitionTranslateHorizontal);
     }
     else displayNoPassword();
-  } 
+  }
   else if (button == &personalizeButton)
     getMainStack().pushPage(ppc, PageStackComponent::kTransitionTranslateHorizontal);    
 }

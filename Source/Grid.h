@@ -12,13 +12,16 @@ public:
   bool addItem(Component *item);
   bool removeItem(Component*);
   void resized() override;
+  bool moveRight(Component*);
+  bool moveLeft(Component*);
+  void switchLastToFirst(GridPage*);
 
   Array<Component *> items;
   OwnedArray<Component> gridRows;
   
 private:
-
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GridPage)
+
 };
 
 class Grid : public Component {
@@ -41,6 +44,9 @@ public:
   void showPrevPage();
   void showNextPage();
   void resized() override;
+  bool moveLeft(Component*);
+  bool moveRight(Component*);
+  
 private:
   void shiftIcons(int);
 

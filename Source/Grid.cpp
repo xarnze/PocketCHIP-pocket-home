@@ -45,6 +45,59 @@ bool GridPage::removeItem(Component* item){
   return false;
 }
 
+bool GridPage::moveRight(Component* item){
+  int index = items.indexOf(item);
+  int lastindex = numCols*numRows-1;
+  //Check whether it's in the current grid or the last item
+  if(index == -1 || index == lastindex) return false;
+  Component* previous = items[index+1];
+  items.swap(index, index+1);
+  //Now let's swap the the grid rows
+  int item_row = 0;
+  int next_row = 0;
+  if(index == numCols-1){ 
+    item_row = 0; 
+    next_row = 1;
+    gridRows[item_row]->removeChildComponent(item);
+    gridRows[next_row]->removeChildComponent(previous);
+    gridRows[item_row]->addAndMakeVisible(previous);
+    gridRows[next_row]->addAndMakeVisible(item);
+  }
+  return true;
+}
+
+
+bool GridPage::moveLeft(Component* item){
+  int index = items.indexOf(item);
+  //Check whether it's in the current grid or the first item
+  if(index == -1 || index == 0) return false;
+  Component* previous = items[index-1];
+  items.swap(index, index-1);
+  //Now let's swap the the grid rows
+  int next_row = 0;
+  if(index == numCols){ 
+    int item_row = 1; 
+    gridRows[item_row]->removeChildComponent(item);
+    gridRows[next_row]->removeChildComponent(previous);
+    gridRows[item_row]->addAndMakeVisible(previous);
+    gridRows[next_row]->addAndMakeVisible(item);
+  }
+  return true;
+}
+
+void GridPage::switchLastToFirst(GridPage* next){
+  int lastindex = items.size()-1;
+  Component* curitem  = items[lastindex];
+  Component* first = next->items[0];
+  gridRows[numRows-1]->removeChildComponent(curitem);
+  next->gridRows[0]->removeChildComponent(first);
+  gridRows[numRows-1]->addAndMakeVisible(first);
+  next->gridRows[0]->addAndMakeVisible(curitem);
+  
+  items.set(lastindex, first);
+  (next->items).set(0, curitem);
+}
+
 void GridPage::resized() {}
 
 Grid::Grid(int numCols, int numRows) :
@@ -106,7 +159,7 @@ void Grid::removeItem(Component* item){
   //items.add(newicon);
   shiftIcons(index);
   GridPage* last = pages.getLast();
-  /* If after shifting the last page doesn't have any icona nymore
+  /* If after shifting the last page doesn't have any icon anymore
    * we must delete the last page */
   if(last->items.size() == 0){
     /* If the current page is the last, we msut switch to the previous one,
@@ -218,4 +271,34 @@ void Grid::showNextPage() {
     int i = pages.indexOf(page);
     showPageAtIndex(i+1);
   };
+}
+
+/* Method exchanging the place of selected icon (item) with 
+ * previous one
+ */
+bool Grid::moveLeft(Component* item){
+  if(!page) return false;
+  bool moved = page->moveLeft(item);
+  /* If item is the first icon, we have to do the job from here */
+  if(!moved && hasPrevPage())
+    pages[pages.indexOf(page)-1]->switchLastToFirst(page);
+  else if(!moved) return false;
+  
+  showCurrentPage();
+  return true;
+}
+
+/* Method exchanging the place of selected icon (item) with 
+ * next one
+ */
+bool Grid::moveRight(Component* item){
+  if(!page) return false;
+  bool moved = page->moveRight(item);
+  /* If item is the last icon of the page, we have to do the job from here */
+  if(!moved && hasNextPage())
+    page->switchLastToFirst(pages[pages.indexOf(page)+1]);
+  else if(!moved) return false;
+  
+  showCurrentPage();
+  return true;
 }

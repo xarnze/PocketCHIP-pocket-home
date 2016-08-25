@@ -8,7 +8,9 @@ Colour PokeLookAndFeel::chipPink = Colour(0xffbc3662);
 Colour PokeLookAndFeel::chipLightPink = Colour(0xfff799aa);
 Colour PokeLookAndFeel::chipPurple = Colour(0xffd23c6d);
 
-PokeLookAndFeel::PokeLookAndFeel() {
+PokeLookAndFeel::PokeLookAndFeel():
+cursor(MouseCursor::NoCursor)
+{
   setColour(DrawableButton::textColourId, Colours::white);
   setColour(TextButton::buttonColourId, Colours::white);
   setColour(TextButton::buttonOnColourId, Colours::white);
@@ -162,10 +164,12 @@ void PokeLookAndFeel::drawDrawableButton(Graphics &g, DrawableButton &button,
   }
 }
 
+void PokeLookAndFeel::setCursorVisible(bool visible){
+  if(visible) cursor = MouseCursor::ParentCursor;
+  else cursor = MouseCursor::NoCursor;
+}
+
 MouseCursor PokeLookAndFeel::getMouseCursorFor(Component &component) {
-#ifndef _DEBUG
-  return MouseCursor::NoCursor;
-#else
-  return LookAndFeel_V3::getMouseCursorFor(component);
-#endif
+  return cursor;
+  //return LookAndFeel_V3::getMouseCursorFor(component);
 }

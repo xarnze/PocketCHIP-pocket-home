@@ -377,25 +377,68 @@ void AppsPageComponent::mouseUp(const MouseEvent& me){
   shouldMove = false;
 }
 
+/* left is true if the current icon has to be switched 
+ * with the one on its left */
+void AppsPageComponent::moveInConfig(AppIconButton* icon, bool left){
+  //Get the global configuration
+  var json = getConfigJSON();
+  Array<var>* pages_arr = (json["pages"].getArray());
+  const var& pages = ((*pages_arr)[0]);
+  Array<var>* items_arr = pages["items"].getArray();
+  
+  //Offset of the icon to switch with
+  int nxtoffset = left?-1:1;
+  //Searching for the element in the Array
+  for(int i = 0; i < items_arr->size(); i++){
+    const var& elt = (*items_arr)[i];
+    if(elt["name"] == icon->getName() && elt["shell"] == icon->shell){
+      items_arr->swap(i, i+nxtoffset);
+      break;
+    }
+  }
+  
+  //Write the config object to the file
+  File config = getConfigFile();
+  DynamicObject* obj = json.getDynamicObject();
+  String s = JSON::toString(json);
+  config.replaceWithText(s);
+}
+
 void AppsPageComponent::manageChoice(AppIconButton* icon, int choice){
   EditWindow* ew;
+  LookAndFeel& laf = getLookAndFeel();
+  PokeLookAndFeel* mc = (PokeLookAndFeel*) &laf;
+  bool answer;
   switch(choice){
     case EDIT:
-      /*ew = new EditWindow(icon);
+      ew = new EditWindow(icon);
       addAndMakeVisible(ew);
-      ew->invoke();*/
+      answer = ew->invoke();
+      if(answer) mc->setCursorVisible(true);
+      else mc->setCursorVisible(false);
+      //Process result here, then delete
+      removeChildComponent(ew);
+      delete ew;
       break;
       
     case MOVELEFT:
+      //Moving for the current session
+      answer = grid->moveLeft(icon);
+      //Moving for the next session (update config.json)
+      if(answer) moveInConfig(icon, true);
       break;
       
     case MOVERIGHT:
+      //Moving for the current session
+      answer = grid->moveRight(icon);
+      //Moving for the next session (update config.json)
+      if(answer) moveInConfig(icon, false);
       break;
       
     case DELETE:
       onTrash(icon);
       break;
-      
+
     default:
       break;
   }
@@ -464,12 +507,11 @@ void EditWindow::paint(Graphics &g){
 }
 
 void EditWindow::buttonClicked(Button* button){
-  if(button == &apply){
+  if(button == &apply)
     choice = true;
-  }
-  else{
+  else
     choice = false;
-  }
+  exitModalState(0);
 }
 
 void EditWindow::resized(){
@@ -478,4 +520,6 @@ void EditWindow::resized(){
 
 bool EditWindow::invoke(){
   this->setVisible(true);
+  runModalLoop();
+  return choice;
 }
