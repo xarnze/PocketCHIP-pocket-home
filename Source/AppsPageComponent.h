@@ -67,6 +67,13 @@ private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AppListComponent)
 };
 
+enum Choices{
+  EDIT      = 1,
+  MOVELEFT  = 2,
+  MOVERIGHT = 3,
+  DELETE    = 4
+};
+
 class AppsPageComponent : public AppListComponent{
 public:
   AppsPageComponent(LauncherComponent* launcherComponent);
@@ -96,10 +103,12 @@ private:
   AppCheckTimer runningCheckTimer;
   AppDebounceTimer debounceTimer;
 
+  void onTrash(Button*);
   void startApp(AppIconButton* appButton);
   void focusApp(AppIconButton* appButton, const String& windowId);
   void startOrFocusApp(AppIconButton* appButton);
   void openAppsLibrary();
+  void manageChoice(AppIconButton*, int);
   
   //Trash Icon
   ScopedPointer<ImageButton> trashButton;
@@ -120,4 +129,22 @@ public:
 private:
     Button* next;
     AppListComponent* page;
+};
+
+
+class EditWindow: public Component, public Button::Listener{
+public:
+  EditWindow(AppIconButton*);
+  ~EditWindow();
+  virtual void paint(Graphics &) override;
+  virtual void resized() override;
+  virtual bool invoke();
+  virtual void buttonClicked(Button*) override;
+  
+private:
+  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EditWindow)  
+  AppIconButton* button;
+  TextButton apply;
+  TextButton cancel;
+  bool choice;
 };
