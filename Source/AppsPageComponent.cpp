@@ -404,6 +404,40 @@ void AppsPageComponent::moveInConfig(AppIconButton* icon, bool left){
   config.replaceWithText(s);
 }
 
+void AppsPageComponent::updateIcon(AppIconButton* icon, EditWindow* ew){
+  //Get the global configuration
+  var json = getConfigJSON();
+  Array<var>* pages_arr = (json["pages"].getArray());
+  const var& pages = ((*pages_arr)[0]);
+  Array<var>* items_arr = pages["items"].getArray();
+  
+  //Searching for the element in the Array
+  for(int i = 0; i < items_arr->size(); i++){
+    const var& elt = (*items_arr)[i];
+    if(elt["name"] == icon->getName() && elt["shell"] == icon->shell){
+      DynamicObject* new_elt = elt.getDynamicObject();
+      new_elt->setProperty("name",  ew->getName());
+      icon->setName(ew->getName());
+      new_elt->setProperty("shell", ew->getShell());
+      icon->shell = ew->getShell();
+      if(ew->getIcon() != ""){
+	new_elt->setProperty("icon", ew->getIcon());
+	Image img = createImageFromFile(ew->getIcon());
+	DrawableImage newicn;
+	newicn.setImage(img);
+	icon->setImages(&newicn);
+      }
+      break;
+    }
+  }
+  
+  //Write the config object to the file
+  File config = getConfigFile();
+  DynamicObject* obj = json.getDynamicObject();
+  String s = JSON::toString(json);
+  config.replaceWithText(s);
+}
+
 void AppsPageComponent::manageChoice(AppIconButton* icon, int choice){
   EditWindow* ew;
   LookAndFeel& laf = getLookAndFeel();
@@ -414,8 +448,9 @@ void AppsPageComponent::manageChoice(AppIconButton* icon, int choice){
       ew = new EditWindow(icon);
       addAndMakeVisible(ew);
       answer = ew->invoke();
-      if(answer) mc->setCursorVisible(true);
-      else mc->setCursorVisible(false);
+      /*if(answer) mc->setCursorVisible(true);
+      else mc->setCursorVisible(false);*/
+      if(answer) updateIcon(icon, ew);
       //Process result here, then delete
       removeChildComponent(ew);
       delete ew;
@@ -483,34 +518,106 @@ void NavigationListener::buttonClicked(Button *button){
 }
 
 EditWindow::EditWindow(AppIconButton* button): button(button),
-apply("Apply", "Apply"), cancel("Cancel"), choice(0)
+lname("name", "Name: "), licon("icon", "Icon path: "), 
+lshell("shell", "Shell command: "),
+apply("Apply", "Apply"), cancel("Cancel"),
+browse("..."), choice(0)
 {
-  
+  browse.addListener(this);
   apply.addListener(this);
   cancel.addListener(this);
   
-  int size = 350;
+  //Set up the text fields
+  name.setText(button->getName());
+  shell.setText(button->shell);
+  
+  lname.setColour(Label::ColourIds::textColourId, Colours::black);
+  licon.setColour(Label::ColourIds::textColourId, Colours::black);
+  lshell.setColour(Label::ColourIds::textColourId, Colours::black);
+  
+  int size = 380;
   int gap = 30;
+  int sizebrowse = 35;
   this->setBounds(0, 30, size, 212);
   
-  apply.setBounds(gap, 172, (size-150)/2, 30);
-  cancel.setBounds(2*gap+(size/2), 172, (size-150)/2, 30);
+  int width = (size-150)/2;
+  apply.setBounds(gap, 172, width, 30);
+  cancel.setBounds(2*gap+(size/2), 172, width, 30);
+  lname.setBounds(gap, 10, width, 30);
+  licon.setBounds(gap, 50, width, 30);
+  lshell.setBounds(gap, 90, width, 30);
   
+  //Placing the text fields
+  int x = gap+width+gap;
+  name.setBounds(x, 10, size/2, 30);
+  icon.setBounds(x, 50, size/2-sizebrowse, 30);
+  shell.setBounds(x,90, size/2, 30);
+  //Browsing icon
+  browse.setBounds(x+size/2-sizebrowse, 50, sizebrowse, 30);
+  
+  addAndMakeVisible(lname);
+  addAndMakeVisible(licon);
+  addAndMakeVisible(lshell);
+  addAndMakeVisible(name);
+  addAndMakeVisible(icon);
+  addAndMakeVisible(shell);
   addAndMakeVisible(apply);
-  addAndMakeVisible(cancel); 
+  addAndMakeVisible(cancel);
+  addAndMakeVisible(browse);
+  
+  //Looking for the image path
+  var json = getConfigJSON();
+  Array<var>* pages_arr = (json["pages"].getArray());
+  const var& pages = ((*pages_arr)[0]);
+  Array<var>* items_arr = pages["items"].getArray();
+  
+  //Searching for the element in the Array
+  for(int i = 0; i < items_arr->size(); i++){
+    const var& elt = (*items_arr)[i];
+    if(elt["name"] == button->getName() && elt["shell"] == button->shell){
+      icon.setText(elt["icon"]);
+      break;
+    }
+  }
 }
 
 EditWindow::~EditWindow(){ }
 
 void EditWindow::paint(Graphics &g){
-  g.fillAll(Colours::white);
+  g.fillAll(Colour(0xFFEDEDED));
+}
+
+void EditWindow::mouseDown(const MouseEvent &event){
 }
 
 void EditWindow::buttonClicked(Button* button){
   if(button == &apply)
     choice = true;
-  else
+  else if(button == &cancel)
     choice = false;
+  else{
+    WildcardFileFilter wildcardFilter ("*.png;*.jpg;*.jpeg", 
+                                       String::empty,
+                                       "Image files");
+
+    FileBrowserComponent browser (FileBrowserComponent::canSelectFiles |
+                                  FileBrowserComponent::openMode,
+                                  File::nonexistent,
+                                  &wildcardFilter,
+                                  nullptr);
+
+    FileChooserDialogBox dialogBox ("Choose the icon",
+                                    "Please choose your png icon (ideal size : 90x70 px)",
+                                    browser,
+                                    false,
+                                    Colours::lightgrey);
+    if(dialogBox.show(480,272)){
+      File selectedFile = browser.getSelectedFile(0);
+      String path = selectedFile.getFullPathName();
+      icon.setText(path);
+    }
+    return;
+  }
   exitModalState(0);
 }
 
@@ -522,4 +629,16 @@ bool EditWindow::invoke(){
   this->setVisible(true);
   runModalLoop();
   return choice;
+}
+
+String EditWindow::getName(){
+  return name.getText();
+}
+
+String EditWindow::getIcon(){
+  return icon.getText();
+}
+
+String EditWindow::getShell(){
+  return shell.getText();
 }

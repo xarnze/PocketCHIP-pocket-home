@@ -27,7 +27,7 @@ class AppIconButton : public DrawableButton {
 public:
   AppIconButton(const String &label, const String &shell, const Drawable *image);
   
-  const String shell;
+  String shell;
   
   Rectangle<float> getImageBounds() const override;
 };
@@ -74,6 +74,35 @@ enum Choices{
   DELETE    = 4
 };
 
+
+class EditWindow: public Component, public Button::Listener{
+public:
+  EditWindow(AppIconButton*);
+  ~EditWindow();
+  virtual void paint(Graphics &) override;
+  virtual void resized() override;
+  virtual bool invoke();
+  virtual void buttonClicked(Button*) override;
+  virtual void mouseDown(const MouseEvent&) override;
+  virtual String getName();
+  virtual String getIcon();
+  virtual String getShell();
+  
+private:
+  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EditWindow)  
+  AppIconButton* button;
+  Label lname;
+  TextEditor name;
+  Label licon;
+  TextEditor icon;
+  Label lshell;
+  TextEditor shell;
+  TextButton apply;
+  TextButton cancel;
+  TextButton browse;
+  bool choice;
+};
+
 class AppsPageComponent : public AppListComponent{
 public:
   AppsPageComponent(LauncherComponent* launcherComponent);
@@ -108,7 +137,9 @@ private:
   void focusApp(AppIconButton* appButton, const String& windowId);
   void startOrFocusApp(AppIconButton* appButton);
   void openAppsLibrary();
+  void updateIcon(AppIconButton*, EditWindow*);
   void manageChoice(AppIconButton*, int);
+  void moveInConfig(AppIconButton*, bool);
   
   //Trash Icon
   ScopedPointer<ImageButton> trashButton;
@@ -129,22 +160,4 @@ public:
 private:
     Button* next;
     AppListComponent* page;
-};
-
-
-class EditWindow: public Component, public Button::Listener{
-public:
-  EditWindow(AppIconButton*);
-  ~EditWindow();
-  virtual void paint(Graphics &) override;
-  virtual void resized() override;
-  virtual bool invoke();
-  virtual void buttonClicked(Button*) override;
-  
-private:
-  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EditWindow)  
-  AppIconButton* button;
-  TextButton apply;
-  TextButton cancel;
-  bool choice;
 };
