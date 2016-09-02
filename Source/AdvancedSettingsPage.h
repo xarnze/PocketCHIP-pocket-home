@@ -7,6 +7,7 @@
 #include "Utils.h"
 #include "Main.h"
 
+#define OPTPERPAGE 4
 using namespace juce;
 
 class AdvancedSettingsPage : public Component, public Button::Listener{
@@ -21,6 +22,8 @@ public:
 
 private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AdvancedSettingsPage)
+  
+  void checkNav();
   //Title of the pane
   Label title;
   //BackButton
@@ -31,10 +34,19 @@ private:
   //Pages with associated buttons
   TextButton addLogin;
   TextButton removeLogin;
-  ScopedPointer<SettingsPageLogin> spl;
-  
   TextButton personalizeButton;
+  TextButton dateandtime;
+  TextButton inputoptions;
+  ScopedPointer<SettingsPageLogin> spl;
   ScopedPointer<PersonalizePageComponent> ppc;
+  
+  //Next and previous buttons
+  ScopedPointer<ImageButton> previousarrow;
+  ScopedPointer<ImageButton> nextarrow;
+  
+  //Array of buttons
+  std::vector<TextButton*> allbuttons;
+  int index;
 };
 
 #endif
