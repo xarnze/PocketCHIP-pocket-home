@@ -51,6 +51,7 @@ endif
 OBJECTS := \
   $(OBJDIR)/Grid_a461bccf.o \
   $(OBJDIR)/ClockMonitor.o \
+  $(OBJDIR)/DateTimePage.o \
   $(OBJDIR)/SettingsPageLogin.o \
   $(OBJDIR)/PersonalizePageComponent.o \
   $(OBJDIR)/AdvancedSettingsPage.o \
@@ -101,6 +102,11 @@ strip:
 $(OBJDIR)/Grid_a461bccf.o: ../../Source/Grid.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Grid.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/DateTimePage.o: ../../Source/DateTimePage.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling DateTimePage.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/ClockMonitor.o: ../../Source/ClockMonitor.cpp

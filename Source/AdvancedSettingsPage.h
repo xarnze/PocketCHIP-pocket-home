@@ -6,6 +6,7 @@
 #include "PersonalizePageComponent.h"
 #include "Utils.h"
 #include "Main.h"
+#include "DateTimePage.h"
 
 #define OPTPERPAGE 4
 using namespace juce;
@@ -39,6 +40,7 @@ private:
   TextButton inputoptions;
   ScopedPointer<SettingsPageLogin> spl;
   ScopedPointer<PersonalizePageComponent> ppc;
+  ScopedPointer<DateTimePage> datetime;
   
   //Next and previous buttons
   ScopedPointer<ImageButton> previousarrow;

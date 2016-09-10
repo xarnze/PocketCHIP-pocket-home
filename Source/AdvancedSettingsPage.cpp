@@ -9,6 +9,7 @@ personalizeButton("Personalize your homepage"),
 dateandtime("Date and time"),
 inputoptions("Input options"),
 spl(new SettingsPageLogin),
+datetime(new DateTimePage),
 ppc(new PersonalizePageComponent(lc)),
 index(0)
 {
@@ -136,7 +137,7 @@ void AdvancedSettingsPage::buttonClicked(Button* button){
     
   }
   else if(button == &dateandtime){
-    
+    getMainStack().pushPage(datetime, PageStackComponent::kTransitionTranslateHorizontal);
   }
 }
 

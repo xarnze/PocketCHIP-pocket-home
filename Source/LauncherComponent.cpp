@@ -163,10 +163,14 @@ clock(nullptr), labelip("ip", "")
   clock = new ClockMonitor;
   clock->getLabel().setBounds(380, 0, 50, 50);
   String displayclock = (configJson["showclock"]).toString();
+  String formatclock = (configJson["timeformat"]).toString();
   if(displayclock.length()==0 || displayclock==String("yes"))
     setClockVisible(true);
   else
     setClockVisible(false);
+  
+  if(formatclock == "ampm")
+    clock->setAmMode(true);
   
   /* Battery percentage label */
   batteryLabel = new Label("percentage", "-%");
