@@ -1,11 +1,12 @@
 #include "DateTimePage.h"
 
-DateTimePage::DateTimePage():
+DateTimePage::DateTimePage(LauncherComponent* lc):
 bg_color(0xffd23c6d),
 title("settings", "Date and time settings"),
 choosemode("choosemode"),
 reconfigure("Reconfigure time"),
-datemode("datemode", "Select the display mode for the clock:")
+datemode("datemode", "Select the display mode for the clock:"),
+lc(lc)
 {
   //Title font
   title.setFont(Font(27.f));
@@ -56,6 +57,8 @@ void DateTimePage::comboBoxChanged(ComboBox* c){
   File configfile = getConfigFile();
   String jsonstring = JSON::toString(json);
   configfile.replaceWithText(jsonstring);
+  
+  lc->setClockAMPM(format=="ampm");
 }
 
 void DateTimePage::paint(Graphics& g){

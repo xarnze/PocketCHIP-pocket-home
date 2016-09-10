@@ -9,7 +9,7 @@ personalizeButton("Personalize your homepage"),
 dateandtime("Date and time"),
 inputoptions("Input options"),
 spl(new SettingsPageLogin),
-datetime(new DateTimePage),
+datetime(new DateTimePage(lc)),
 ppc(new PersonalizePageComponent(lc)),
 index(0)
 {

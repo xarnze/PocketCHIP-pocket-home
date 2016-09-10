@@ -9,7 +9,7 @@ using namespace juce;
 
 class DateTimePage : public Component, public Button::Listener, private ComboBox::Listener{
 public:
-  DateTimePage();
+  DateTimePage(LauncherComponent*);
   ~DateTimePage();
   void buttonClicked(Button*) override;
   void paint(Graphics&) override;
@@ -18,7 +18,8 @@ public:
 
 private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(DateTimePage)
-  
+  //LauncherComponent containing the clock
+  LauncherComponent* lc;
   //BackButton
   ScopedPointer<ImageButton> backButton;
   //Background color

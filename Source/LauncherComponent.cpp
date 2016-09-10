@@ -152,6 +152,10 @@ void LauncherComponent::setClockVisible(bool visible){
   }
 }
 
+void LauncherComponent::setClockAMPM(bool ampm){
+  clock->setAmMode(ampm);
+}
+
 LauncherComponent::LauncherComponent(const var &configJson) :
 clock(nullptr), labelip("ip", "")
 {
@@ -169,8 +173,7 @@ clock(nullptr), labelip("ip", "")
   else
     setClockVisible(false);
   
-  if(formatclock == "ampm")
-    clock->setAmMode(true);
+  setClockAMPM(formatclock == "ampm");
   
   /* Battery percentage label */
   batteryLabel = new Label("percentage", "-%");

@@ -90,6 +90,7 @@ public:
     void hideLaunchSpinner();
 
     void deleteIcon(String,String,Component*);
+    void setClockAMPM(bool);
     void addIcon(const String&, const String&, const String&);
     void setColorBackground(const String&);
     void setImageBackground(const String&);
