@@ -7,10 +7,11 @@ addLogin("Change your password"),
 removeLogin("Remove your password"),
 personalizeButton("Personalize your homepage"),
 dateandtime("Date and time"),
-inputoptions("Input options"),
+inputoptions("Input settings"),
 spl(new SettingsPageLogin),
 datetime(new DateTimePage(lc)),
 ppc(new PersonalizePageComponent(lc)),
+inputsettings(new InputSettingsPage(lc)),
 index(0)
 {
   //Title font
@@ -134,7 +135,7 @@ void AdvancedSettingsPage::buttonClicked(Button* button){
     resized();
   }
   else if(button == &inputoptions){
-    
+    getMainStack().pushPage(inputsettings, PageStackComponent::kTransitionTranslateHorizontal);
   }
   else if(button == &dateandtime){
     getMainStack().pushPage(datetime, PageStackComponent::kTransitionTranslateHorizontal);

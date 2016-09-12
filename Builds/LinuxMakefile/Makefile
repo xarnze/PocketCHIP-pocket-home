@@ -52,6 +52,7 @@ OBJECTS := \
   $(OBJDIR)/Grid_a461bccf.o \
   $(OBJDIR)/ClockMonitor.o \
   $(OBJDIR)/DateTimePage.o \
+  $(OBJDIR)/InputSettingsPage.o \
   $(OBJDIR)/SettingsPageLogin.o \
   $(OBJDIR)/PersonalizePageComponent.o \
   $(OBJDIR)/AdvancedSettingsPage.o \
@@ -105,6 +106,11 @@ $(OBJDIR)/Grid_a461bccf.o: ../../Source/Grid.cpp
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/DateTimePage.o: ../../Source/DateTimePage.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling DateTimePage.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/InputSettingsPage.o: ../../Source/InputSettingsPage.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling DateTimePage.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"

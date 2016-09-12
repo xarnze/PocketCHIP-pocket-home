@@ -1,6 +1,9 @@
 #include "BatteryMonitor.h"
 #include "Utils.h"
 
+#include <sys/types.h>
+#include <unistd.h>
+       
 BatteryMonitor::BatteryMonitor( )
   : Thread( "BatteryMonitor" ) {
   status.percentage = 0;

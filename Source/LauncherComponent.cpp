@@ -423,6 +423,4 @@ void LauncherComponent::deleteIcon(String name, String shell, Component* button)
   /* Deleting graphically, without rebooting the app */
   AppsPageComponent* appsPage = (AppsPageComponent*) pagesByName["Apps"];
   appsPage->removeIcon(button);
-  //execlp("/usr/bin/pocket-home", "/usr/bin/pocket-home", NULL);
-  //perror("Error rebooting application");
 }

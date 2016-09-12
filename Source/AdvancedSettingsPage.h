@@ -4,6 +4,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "SettingsPageLogin.h"
 #include "PersonalizePageComponent.h"
+#include "InputSettingsPage.h"
 #include "Utils.h"
 #include "Main.h"
 #include "DateTimePage.h"
@@ -41,6 +42,7 @@ private:
   ScopedPointer<SettingsPageLogin> spl;
   ScopedPointer<PersonalizePageComponent> ppc;
   ScopedPointer<DateTimePage> datetime;
+  ScopedPointer<InputSettingsPage> inputsettings;
   
   //Next and previous buttons
   ScopedPointer<ImageButton> previousarrow;

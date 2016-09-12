@@ -440,16 +440,13 @@ void AppsPageComponent::updateIcon(AppIconButton* icon, EditWindow* ew){
 
 void AppsPageComponent::manageChoice(AppIconButton* icon, int choice){
   EditWindow* ew;
-  LookAndFeel& laf = getLookAndFeel();
-  PokeLookAndFeel* mc = (PokeLookAndFeel*) &laf;
+  
   bool answer;
   switch(choice){
     case EDIT:
       ew = new EditWindow(icon);
       addAndMakeVisible(ew);
       answer = ew->invoke();
-      /*if(answer) mc->setCursorVisible(true);
-      else mc->setCursorVisible(false);*/
       if(answer) updateIcon(icon, ew);
       //Process result here, then delete
       removeChildComponent(ew);
