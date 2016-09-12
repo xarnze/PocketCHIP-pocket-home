@@ -41,7 +41,7 @@ void InputSettingsPage::buttonClicked(Button* but){
   if(but == backButton)
     getMainStack().popPage(PageStackComponent::kTransitionTranslateHorizontal);
   else if(but == &calibrating){
-    int ret = system("vala-terminal -fs 8 -g 20 20 -e 'xinput_calibrator'");
+    int ret = system("vala-terminal -fs 8 -g 20 20 -e 'xinput_calibrator && exit'");
     if(ret == -1)
       AlertWindow::showMessageBox(AlertWindow::WarningIcon, "Error", "Failed launching vala-terminal, is it installed ?");
   }
