@@ -337,7 +337,7 @@ void LauncherComponent::resized() {
   
   batteryLabel->setBounds(bounds.getX()+40, bounds.getY(), 50, 50);
   
-  clock->getLabel().setBounds(bounds.getX()+380, bounds.getY(), 60, 50);
+  clock->getLabel().setBounds(bounds.getX()+370, bounds.getY(), 80, 50);
 
   labelip.setBounds(bounds.getX()+190, bounds.getY(), 100, 50);
   // init
