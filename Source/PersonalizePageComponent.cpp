@@ -159,6 +159,11 @@ void PersonalizePageComponent::buttonClicked(Button* button){
   }
   else if(button == &add_btn){
     showAddComponents(true);
+    success.setVisible(false);
+    apply.setVisible(true);
+    edit_name.setText("");
+    edit_icn.setText("");
+    edit_shell.setText("");
   }
   else if(button == &browse){
     WildcardFileFilter wildcardFilter ("*.png;*.jpg;*.jpeg", 
