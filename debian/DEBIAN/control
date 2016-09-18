@@ -1,0 +1,11 @@
+Source: pocket-home
+Version: 0.0.8.9
+Section: x11
+Priority: optional
+Maintainer: Andrew Hay Kurtz <software@nextthing.co>
+Homepage: http://opensource.nextthing.co
+Package: pocket-home
+Architecture: armhf
+Depends: xinput-calibrator
+Description: Home screen for PocketCHIP.
+ Home screen allowing to launch different kind of applications.
