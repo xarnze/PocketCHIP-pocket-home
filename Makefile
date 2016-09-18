@@ -1,5 +1,8 @@
 export CONFIG:=Release
 
+VERSION=0.0.8.9
+BUILD=1
+
 PKG_CONFIG:=$(shell which pkg-config)
 
 PKG_CONFIG_PACKAGES = \
@@ -20,6 +23,13 @@ clean:
 
 wifitest:
 	cd Builds/LinuxMakefile && $(MAKE) -f UnitTests.mk ../../build/$(CONFIG)/wifitest
+
+pack: all
+	cp build/Release/pocket-home debian/usr/bin/ && \
+	./pack-debian.sh $(VERSION) $(BUILD)
+
+install: pack
+	sudo dpkg -i pocket-home_$(VERSION)-$(BUILD)_armhf.deb
 
 devinstall:
 	killall pocket-home ;\
