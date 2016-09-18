@@ -6,6 +6,7 @@
 sudo apt-get install \
     git \
     build-essential \
+    libasound2-dev \
     libx11-dev \
     libxrandr-dev \
     libxcursor-dev \
