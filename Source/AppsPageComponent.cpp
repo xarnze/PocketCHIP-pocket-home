@@ -64,7 +64,7 @@ void AppListComponent::previous(){
 DrawableButton *AppListComponent::createAndOwnIcon(const String &name, const String &iconPath, const String &shell) {
   File icon = assetFile(iconPath);
   Image image;
-  if(iconPath == "" || !icon.exists())
+  if(iconPath == "" || !icon.exists() || icon.getSize()==0)
     image = createImageFromFile(assetFile("appIcons/default.png"));
   else
     image = createImageFromFile(icon);
