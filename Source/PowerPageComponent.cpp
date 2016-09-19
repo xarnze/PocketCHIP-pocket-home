@@ -123,6 +123,8 @@ PowerPageComponent::~PowerPageComponent() {}
 
 void PowerPageComponent::hideLockscreen(){
     removeChildComponent(lockscreen);
+    //Let's go back to the homescreen
+    getMainStack().popPage(PageStackComponent::kTransitionNone);    
 }
 
 void PowerPageComponent::paint(Graphics &g) {
@@ -179,8 +181,10 @@ void PowerPageComponent::setSleep() {
             child.start("xset dpms force on");
         } else {
             lockscreen->hasPassword();
+	    //Show the lockscreen
             addAndMakeVisible(lockscreen);
             lockscreen->setAlwaysOnTop(true);
+	    //Turn off the screen
             child.start("xset dpms force off" );
         }
     }
