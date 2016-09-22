@@ -8,12 +8,6 @@ BatteryMonitor::BatteryMonitor( )
   : Thread( "BatteryMonitor" ) {
   status.percentage = 0;
   status.isCharging = 0;
-  
-  auto voltageFileName = absoluteFileFromPath( "/usr/lib/pocketchip-batt/voltage" );
-  auto chargingFileName = absoluteFileFromPath( "/usr/lib/pocketchip-batt/charging" );
-  
-  voltageFile = File( voltageFileName );
-  chargingFile = File( chargingFileName );
 }
 
 BatteryMonitor::~BatteryMonitor( ) {
@@ -23,12 +17,20 @@ const BatteryStatus& BatteryMonitor::getCurrentStatus( ) {
   return status;
 }
 
+int BatteryMonitor::addAndCalculateAverage(int cur){
+  //If the array already contains 10 elements, we need to pop the eldest
+  if(percentages.size() >= 10)
+    percentages.remove(0);
+  percentages.add(cur);
+  
+  int i, size = percentages.size();
+  float sum = 0;
+  for(i = 0; i < size; i++)
+    sum = percentages[i];
+  return (int) (sum/size);
+}
+
 void BatteryMonitor::updateStatus() {
-  /*if( chargingFile.exists() ) {
-    auto chargingValue = chargingFile.loadFileAsString();
-    status.isCharging = chargingValue.getIntValue();
-    //if(status.isCharging != 0) status.isCharging = 1;
-  }*/
   
   //Now, we use i2cget to get the battery status (Charging or not)
   String command = "/usr/sbin/i2cget -y -f 0 0x34 0x00";
@@ -53,30 +55,10 @@ void BatteryMonitor::updateStatus() {
   strpercentage = strpercentage.trim();
   int x = std::stoul(strpercentage.toRawUTF8(), nullptr, 16);
   
-  //Let's make the percentage a modulo of 5
-  int mod = x%5;
-  if(x>2) x += 5-mod;
-  else x -= mod;
-  
+  //No need to have a modulo of 5 now, let's get the average
+  x = addAndCalculateAverage(x);
+    
   status.percentage = x;
-  /*
-  if( voltageFile.exists() ) {
-    auto voltageValue = voltageFile.loadFileAsString();
-    
-    float voltageOffset = (voltageValue.getFloatValue()*.001) - minVoltage;
-    float maxOffset = maxVoltage - minVoltage;
-    
-    // turn voltage into a percentage we can use
-    status.percentage = (voltageOffset * 100)/maxOffset;
-    
-    // only show lowest percentage graphic if battery is at least 15%
-    if ( status.percentage <= 25 && status.percentage > 15) {
-      status.percentage = 15;
-    }
-    // limit range to [0:100]
-    if(status.percentage>100) status.percentage = 100;
-    if(status.percentage<0) status.percentage = 0;
-  }*/
 }
 
 void BatteryMonitor::run( ) {

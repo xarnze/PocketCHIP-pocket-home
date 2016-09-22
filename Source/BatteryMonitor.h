@@ -13,11 +13,9 @@ class BatteryMonitor: public juce::Thread {
 private:
   BatteryStatus status;
   
-  File voltageFile;
-  File chargingFile;
+  Array<int> percentages;
+  int addAndCalculateAverage(int);
   
-  float maxVoltage = 4.25;
-  float minVoltage = 3.275;
 public:
   BatteryMonitor();
   ~BatteryMonitor();
