@@ -489,7 +489,8 @@ void AppsPageComponent::buttonClicked(Button *button) {
   else if (button == appsLibraryBtn) {
     openAppsLibrary();
   }
-  else if (mk==ModifierKeys::ctrlModifier){
+  else if (mk==ModifierKeys::ctrlModifier ||
+	   mk==ModifierKeys::rightButtonModifier){
     //Control key was pressed
     PopupMenu pop;
     pop.addItem(EDIT, "Edit");
