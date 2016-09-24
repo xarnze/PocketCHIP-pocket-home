@@ -26,7 +26,7 @@ int BatteryMonitor::addAndCalculateAverage(int cur){
   int i, size = percentages.size();
   float sum = 0;
   for(i = 0; i < size; i++)
-    sum = percentages[i];
+    sum += percentages[i];
   return (int) (sum/size);
 }
 
