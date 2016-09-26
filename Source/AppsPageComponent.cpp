@@ -357,8 +357,36 @@ void AppsPageComponent::onTrash(Button* button){
     }
 }
 
+void AppsPageComponent::buttonClicked(const MouseEvent& me){
+  if(me.originalComponent == this) return;
+  Button* button = (Button*) me.originalComponent;
+  ModifierKeys mk = ModifierKeys::getCurrentModifiers();
+
+  if (mk.isCtrlDown() ||
+      me.mods.isRightButtonDown()
+     ){
+    //Control key was pressed
+    PopupMenu pop;
+    pop.addItem(EDIT, "Edit");
+    pop.addItem(MOVELEFT, "Move left");
+    pop.addItem(MOVERIGHT, "Move right");
+    pop.addItem(DELETE, "Delete");
+    int choice = pop.show();
+    //If nothing has been selected then... do nothing
+    if(!choice) return;
+    manageChoice((AppIconButton*) button, choice);
+  }
+  else{
+    auto appButton = (AppIconButton*)button;
+    startOrFocusApp(appButton);
+  }
+}
+
 void AppsPageComponent::mouseUp(const MouseEvent& me){
-  if(!cpy) return;
+  if(!cpy){
+    buttonClicked(me);
+    return;
+  }
   bool ontrash = cpy->getAlpha()>=0.25 && cpy->getAlpha()<=0.35;
   if(ontrash){
     //On Delete icon
@@ -476,8 +504,7 @@ void AppsPageComponent::manageChoice(AppIconButton* icon, int choice){
   }
 }
 
-void AppsPageComponent::buttonClicked(Button *button) {
-  ModifierKeys mk = ModifierKeys::getCurrentModifiers ();
+void AppsPageComponent::buttonClicked(Button *button) {  
   if (button == prevPageBtn) {
     grid->showPrevPage();
     checkShowPageNav();
@@ -489,8 +516,7 @@ void AppsPageComponent::buttonClicked(Button *button) {
   else if (button == appsLibraryBtn) {
     openAppsLibrary();
   }
-  else if (mk==ModifierKeys::ctrlModifier ||
-	   mk==ModifierKeys::rightButtonModifier){
+  /*else if (mk.isCtrlDown()){
     //Control key was pressed
     PopupMenu pop;
     pop.addItem(EDIT, "Edit");
@@ -505,7 +531,7 @@ void AppsPageComponent::buttonClicked(Button *button) {
   else{
     auto appButton = (AppIconButton*)button;
     startOrFocusApp(appButton);
-  }
+  }*/
 }
 
 NavigationListener::NavigationListener(Button* next, AppListComponent* p): next(next), page(p){}

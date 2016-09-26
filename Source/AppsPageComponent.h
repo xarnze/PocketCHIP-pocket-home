@@ -114,6 +114,7 @@ public:
   
   virtual void buttonStateChanged(Button*) override;
   void buttonClicked(Button *button) override;
+  void buttonClicked(const MouseEvent&);
   void mouseDrag(const MouseEvent&) override;
   void mouseUp(const MouseEvent&) override;
   
