@@ -93,6 +93,8 @@ functiontoexecute(lambda), haspassword(false)
   log->addListener(this);
   
   this->hasPassword();
+  /* Adding a listener for catching the moment return key is pressed */
+  cur_password->addListener(this);
   
   addAndMakeVisible(bgImage, 1);
   addAndMakeVisible(ntcIcon, 4);
@@ -134,6 +136,13 @@ void LoginPage::buttonClicked(Button *button){
       functiontoexecute();
   }
   else displayError();
+}
+
+void LoginPage::textEditorReturnKeyPressed(TextEditor& te){
+  /* log is a ScopedPointer<TextButton>, so *log, will have type Button
+   * and so &(*log) has type Button*, required for buttonClicked
+   */
+  buttonClicked(&(*log));
 }
 
 void LoginPage::paint(Graphics &g) {

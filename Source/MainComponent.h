@@ -8,7 +8,7 @@
 
 class MainContentComponent;
 
-class LoginPage : public Component, public Button::Listener{
+class LoginPage : public Component, public Button::Listener, public TextEditor::Listener{
 public:
   LoginPage(std::function<void(void)>);
   ~LoginPage();
@@ -18,6 +18,7 @@ public:
   virtual void buttonClicked(Button *button) override;
   virtual bool hasPassword();
   virtual void textFocus();
+  virtual void textEditorReturnKeyPressed(TextEditor&) override;
   
 private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LoginPage)
