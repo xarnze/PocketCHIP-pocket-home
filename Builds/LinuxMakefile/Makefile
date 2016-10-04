@@ -112,7 +112,7 @@ $(OBJDIR)/DateTimePage.o: ../../Source/DateTimePage.cpp
 
 $(OBJDIR)/InputSettingsPage.o: ../../Source/InputSettingsPage.cpp
 	-@mkdir -p $(OBJDIR)
-	@echo "Compiling DateTimePage.cpp"
+	@echo "Compiling InputSettingsPage.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/ClockMonitor.o: ../../Source/ClockMonitor.cpp
