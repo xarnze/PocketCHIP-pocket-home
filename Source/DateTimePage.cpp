@@ -41,7 +41,7 @@ void DateTimePage::buttonClicked(Button* but){
   if(but == backButton)
     getMainStack().popPage(PageStackComponent::kTransitionTranslateHorizontal);
   else if(but == &reconfigure){
-    int ret = system("vala-terminal -fs 8 -g 20 20 -e 'sudo dpkg-reconfigure tzdata && exit'");
+    int ret = system("vala-terminal -fs 8 -g 20 20 -e 'sudo dpkg-reconfigure tzdata ; exit'");
     if(ret == -1)
       AlertWindow::showMessageBox(AlertWindow::WarningIcon, "Error", "Failed launching vala-terminal, is it installed ?");
   }
