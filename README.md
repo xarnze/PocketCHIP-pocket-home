@@ -30,7 +30,7 @@
 
 #### 6. Upgrade `pocket-home`
 
-    sudo apt-get update
+    sudo apt-get install pocket-home
 
 
 Note: The previous commands need to be typed once, then, upgrading is easy and is done by typing `sudo apt-get update`
