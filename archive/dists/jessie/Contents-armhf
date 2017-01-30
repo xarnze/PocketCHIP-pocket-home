@@ -3,6 +3,7 @@ usr/share/doc/pocket-home/changelog.gz			    x11/pocket-home
 usr/share/doc/pocket-home/copyright			    x11/pocket-home
 usr/share/pocket-home/appIcons/alex4.png		    x11/pocket-home
 usr/share/pocket-home/appIcons/calculator.png		    x11/pocket-home
+usr/share/pocket-home/appIcons/default.png		    x11/pocket-home
 usr/share/pocket-home/appIcons/filebrowser.png		    x11/pocket-home
 usr/share/pocket-home/appIcons/help.png			    x11/pocket-home
 usr/share/pocket-home/appIcons/imageviewer.png		    x11/pocket-home
@@ -35,6 +36,8 @@ usr/share/pocket-home/config.json			    x11/pocket-home
 usr/share/pocket-home/fonts/Lato-Regular.ttf		    x11/pocket-home
 usr/share/pocket-home/installApp.png			    x11/pocket-home
 usr/share/pocket-home/lock.png				    x11/pocket-home
+usr/share/pocket-home/login/background.png		    x11/pocket-home
+usr/share/pocket-home/login/ntcbanner.png		    x11/pocket-home
 usr/share/pocket-home/mainBackground.png		    x11/pocket-home
 usr/share/pocket-home/nextIcon.png			    x11/pocket-home
 usr/share/pocket-home/pageDownIcon.png			    x11/pocket-home
