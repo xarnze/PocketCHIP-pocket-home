@@ -10,12 +10,12 @@
 
 #### 2. Add a source to `sources.list`
 
-    echo "deb https://sgentle.github.io/PocketCHIP-pocket-home/archive/ jessie main" | sudo tee /etc/apt/sources.list.d/marshmallow-pocket-chip-home.list
+    echo "deb https://o-marshmallow.github.io/PocketCHIP-pocket-home/archive/ jessie main" | sudo tee /etc/apt/sources.list.d/marshmallow-pocket-chip-home.list
 
 
 #### 3. Add public key to apt
 
-    sudo apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-keys 05E4BBFC
+    sudo apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-keys 584F7F9F
 
 
 #### 4. Fix pocket-home package (which is pinned by NTC)
