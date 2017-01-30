@@ -32,7 +32,8 @@ void ClockMonitor::run(){
     clock->setText(String(formatted),
                    NotificationType::dontSendNotification);
     lock.exit();
-    Thread::sleep(10000);
+    //Thread::sleep(10000);
+    Thread::sleep(1000);
   }
 }
 

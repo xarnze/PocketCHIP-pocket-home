@@ -34,6 +34,8 @@ private:
   
   //Button for calibrating
   TextButton calibrating;
+  //Button for the FN key (xmodmap)
+  TextButton fnmapping;
 };
 
 #endif

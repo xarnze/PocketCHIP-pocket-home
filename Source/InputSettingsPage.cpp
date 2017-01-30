@@ -5,6 +5,7 @@ bg_color(0xffd23c6d),
 title("settings", "Input settings"),
 choosemode("choosemode"),
 calibrating("Calibrate the screen"),
+fnmapping("Remap keyboard (FN key fix)"),
 cursorvisible("cursorvisible", "Select the visibility of the cursor:"),
 lc(lc)
 {
@@ -27,9 +28,11 @@ lc(lc)
   else choosemode.setSelectedId(1);
   
   calibrating.addListener(this);
+  fnmapping.addListener(this);
 
   addAndMakeVisible(cursorvisible);  
   addAndMakeVisible(calibrating);
+  addAndMakeVisible(fnmapping);
   addAndMakeVisible(choosemode);
   addAndMakeVisible(title);
   addAndMakeVisible(backButton);
@@ -41,7 +44,7 @@ void InputSettingsPage::buttonClicked(Button* but){
   if(but == backButton)
     getMainStack().popPage(PageStackComponent::kTransitionTranslateHorizontal);
   else if(but == &calibrating){
-    int ret = system("vala-terminal -fs 8 -g 20 20 -e 'xinput_calibrator && exit'");
+    int ret = system("vala-terminal -fs 8 -g 20 20 -e 'xinput_calibrator ; exit'");
     if(ret == -1)
       AlertWindow::showMessageBox(AlertWindow::WarningIcon, "Error", "Failed launching vala-terminal, is it installed ?");
   }
@@ -89,4 +92,6 @@ void InputSettingsPage::resized(){
   
   int middle = 240-btn_width/2;
   calibrating.setBounds(bounds.getX()+middle, bounds.getY()+150, btn_width, btn_height);
+  
+  fnmapping.setBounds(bounds.getX()+middle, bounds.getY()+200, btn_width, btn_height);
 }
