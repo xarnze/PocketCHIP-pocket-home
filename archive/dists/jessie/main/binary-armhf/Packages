@@ -1,0 +1,18 @@
+Package: pocket-home
+Priority: optional
+Section: x11
+Maintainer: Andrew Hay Kurtz <software@nextthing.co>
+Architecture: armhf
+Source: pocket-home
+Version: 0.0.7
+Depends: 
+Filename: pool/main/pocket-home_0.0.7-3_armhf.deb
+Size: 1205206
+MD5sum: 28a701c73bbfe521d5eedba1f491c953
+SHA1: 8cfd6d1107d4d824abd54bfc97cbe47e24f57754
+SHA256: 5a847056269346a9e40259858d7f007c6d38e720d7b6d7596fa9fea7538b6bf0
+SHA512: 7a4b7ef7a67770f48cf036eb40bc3b3ba8d28e0ba74bd0c34b2b214089ca9cc365203ff44f6edb8dca2864282f234ca3b2b8e32555fd34a3a63064356814f5d1
+Description: Home screen for PocketCHIP.
+ Home screen allowing to launch different kind of applications.
+Homepage: http://opensource.nextthing.co
+
