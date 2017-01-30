@@ -1,7 +1,7 @@
 Architectures: armhf
 Codename: jessie
 Components: main
-Date: Mon, 30 Jan 2017 08:24:36 UTC
+Date: Mon, 30 Jan 2017 08:52:56 UTC
 Label: Pocket Home Marshmallow Edition
 Origin: Marshmallow
 Suite: stable
@@ -10,30 +10,30 @@ MD5Sum:
  0df7aa74dce49cbe7e8fd5425eead976              638 Contents-armhf.bz2
  9b475f8c3fa6c0c4d6dffaf81ca409b5              560 Contents-armhf.gz
  d41d8cd98f00b204e9800998ecf8427e                0 Release
- 7acaf6faf360aae783086c07a54c9991             1381 main/binary-armhf/Packages
- 8ffcfcf8b39ed4a19f4a27c15611ef2e              808 main/binary-armhf/Packages.bz2
- fe96babd96f00449bb6660ce621c25c0              713 main/binary-armhf/Packages.gz
+ 0b825380c05e34a5a81dfa937da187f1              701 main/binary-armhf/Packages
+ fef8719b6e280c4cb7f62fe9e63af89c              547 main/binary-armhf/Packages.bz2
+ bb448e1519a9502d1e4bdb610983bbc2              509 main/binary-armhf/Packages.gz
 SHA1:
  33ab2d3dcd2d4011211d62456d95d5f7c5d5cd4c             4602 Contents-armhf
  aba8a40da30ad58d1a6577ba84c324c1d39b8357              638 Contents-armhf.bz2
  3ce85ec98f6f929013c3a5f492fedf28a4420556              560 Contents-armhf.gz
  da39a3ee5e6b4b0d3255bfef95601890afd80709                0 Release
- f4ff876efaedc6a4e01166933c5dceab9698cd8a             1381 main/binary-armhf/Packages
- 675996fd244b948b6cbfe3402254d50c34e0cfb6              808 main/binary-armhf/Packages.bz2
- 92f9dd523c1d7d6bde51f1b3aea756b9ad3a78a1              713 main/binary-armhf/Packages.gz
+ a70f2c0a17ec8d7ac18d17a488c32ead87e01415              701 main/binary-armhf/Packages
+ ade54031c642d5939c23c11f90eefa3e2cc11cbf              547 main/binary-armhf/Packages.bz2
+ 39b7efd576113c73c6a270156bbcf99d2c08a450              509 main/binary-armhf/Packages.gz
 SHA256:
  7acc389171bc4e06f1c7809f0f6c5cff621a47f48d50ad2c127de9580cc02bce             4602 Contents-armhf
  23d9387f8474f765cf7a725012441671ba502795910b94ad78be4842315b730a              638 Contents-armhf.bz2
  fdcbfe604cd059e2795d0415e453162425d0a9d7a35d33c8871792cae6431322              560 Contents-armhf.gz
  e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855                0 Release
- 82f47b5eaa088be77936ea17f92a2092dd7715ca8a55b708b1a4c9d6e0dbfc5b             1381 main/binary-armhf/Packages
- 651d2d25e6717370117908fd9fdce729b15271d0597eabab786d617944bbce47              808 main/binary-armhf/Packages.bz2
- 40dea713f9879c1134cf8d5b9c0018b5c6e77387413652a7125cf18028133690              713 main/binary-armhf/Packages.gz
+ 33c55ee3ca5ddc8095677f9fc4a2a134453f88269aa31bbc9625ed9915dccc95              701 main/binary-armhf/Packages
+ 560785d5e16e5e3ede7f37dc1fb332b3d6e92a9ec1fdffa1380503a5eec7a679              547 main/binary-armhf/Packages.bz2
+ 5912c6cf7dd33d49b8219d8d80abbf04b225443c6548185e96a79e9c4fc249e7              509 main/binary-armhf/Packages.gz
 SHA512:
  4a45e84d9aa00bc05fa5450f64e046980e6318732b1bc03a51826595a0146b65212aed6899fb641a3240b90a50bdac183cb5ea70588d88e2ef033465c20a1733             4602 Contents-armhf
  6a134be9147235739f9c5286be9469eaeb965ffb211332634df453acc0d0890db1231d6eddaa42fca78495b78006e910b88fa161232f98b56ddae6a68b144b56              638 Contents-armhf.bz2
  94fb87c66b01fbb3b82afeb504bb257dd443ce77d46258bfebef045a32076417c360505fd4c62e246fdfe02b3ead66cac18d3121098d16f081a43e273c4755fc              560 Contents-armhf.gz
  cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e                0 Release
- 36514418b80904e20d37dbf11232b4a63381493bd9e2b5c4d0ea188784269a5f1308cee812934b8a696216b378a9cf23fbbb172b18ff52e3af1d8ead9cfd1a08             1381 main/binary-armhf/Packages
- 4f2539f1638a04f75112f813180c49e6ef4fb19e24c2ec2c8779a24947bf8560f85a62e774dca6304628b8a3c91d97677c1b6973a9e5649d9525a008fe4dfc7d              808 main/binary-armhf/Packages.bz2
- 8eec7235bf14994b4e02953b87642ee3961d1dd7f84b93cbdd9ae2c2bc845fa650eee5a90c640045f09e70cc1828d1ce85ea96358708be051633f92a52d1d7ea              713 main/binary-armhf/Packages.gz
+ 835d9c32ad06406203e8f50465945b138e6eacf551f1c62b920db3da2da10c08abeab6111d0f78af77ca19187069c57cacb0a1a148f89e7359a71f927255c38e              701 main/binary-armhf/Packages
+ c729a5846dc76aea18e4c59c06736532d372d789ef22cc85628a9dc70fcd5ce787dd9800544ba77bbf0e3db0c3ed697bb1c8ced946509795bb7758b03b7cf1ea              547 main/binary-armhf/Packages.bz2
+ d0ba4d597c166fe7bea5143f31e73b0ead731088a8451f241bebd6352f027edea80e069f234ba938c0dd9d2c7af68abc3fec17c1b1baea24721646c12832af2b              509 main/binary-armhf/Packages.gz
