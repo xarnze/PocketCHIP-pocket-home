@@ -160,7 +160,6 @@ LauncherComponent::LauncherComponent(const var &configJson) :
 clock(nullptr), labelip("ip", "")
 {
   /* Ip settings */
-  addChildComponent(labelip);
   labelip.setVisible(false);
 
   /* Setting the clock */
@@ -237,6 +236,7 @@ clock(nullptr), labelip("ip", "")
   
   // Settings page
   auto settingsPage = new SettingsPageComponent(this);
+  settingsPage->addChildComponent(labelip);
   settingsPage->setName("Settings");
   pages.add(settingsPage);
   pagesByName.set("Settings", settingsPage);
@@ -248,7 +248,11 @@ clock(nullptr), labelip("ip", "")
   pagesByName.set("Power", powerPage);
   
   // Apps page
-  auto appsPage = new AppsPageComponent(this);
+  /* Check whether we have to display vertically the icons
+   * Checking "VERTICAL" lets horizontal direction be the default one
+   */
+  bool vertical = (configJson["direction"].toString()=="VERTICAL");
+    auto appsPage = new AppsPageComponent(this, !vertical);
   appsPage->setName("Apps");
   pages.add(appsPage);
   pagesByName.set("Apps", appsPage);
@@ -351,7 +355,7 @@ void LauncherComponent::updateIp(){
   //Creating a socket
   int fd = socket(AF_INET, SOCK_DGRAM, 0);
 
-  //This will helpus getting the IPv4 associated with wlan0 interface
+  //This will help us getting the IPv4 associated with wlan0 interface
   struct ifreq ifr;
   memset(&ifr, 0, sizeof(ifr));
   ifr.ifr_addr.sa_family = AF_INET;
@@ -359,15 +363,14 @@ void LauncherComponent::updateIp(){
   sprintf(ifr.ifr_name, "wlan0");
   //Getting the informations of the socket, so IP address
   ioctl(fd, SIOCGIFADDR, &ifr);
-  //Close the (unused) socket
   close(fd);
 
   char* addr = inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr);
   String ip(addr);
   //Showing the new ip if different than 0.0.0.0
   if(addr == "0.0.0.0"){
-      labelip.setVisible(false);
-      return;
+    labelip.setVisible(false);
+    return;
   }
   labelip.setText("IP: "+ip, dontSendNotification);
   labelip.setVisible(true);

@@ -4,6 +4,8 @@
 #include "Main.h"
 #include "Utils.h"
 
+using namespace std; 
+
 void AppCheckTimer::timerCallback() {
   DBG("AppCheckTimer::timerCallback - check running apps");
   if (appsPage) {
@@ -32,13 +34,17 @@ Rectangle<float> AppIconButton::getImageBounds() const {
   return bounds.withHeight(PokeLookAndFeel::getDrawableButtonImageHeightForBounds(bounds)).toFloat();
 }
 
-AppListComponent::AppListComponent(Component* parent) :
+AppListComponent::AppListComponent(Component* parent, bool ishorizontal) :
   grid(new Grid(3, 2)),
-  nextPageBtn(createImageButton("NextAppsPage",
-                                ImageFileFormat::loadFrom(assetFile("nextIcon.png")))),
-  prevPageBtn(createImageButton("PrevAppsPage",
-                                ImageFileFormat::loadFrom(assetFile("backIcon.png"))))
+  direction(ishorizontal?HORIZONTAL:VERTICAL)
 {
+  string previcn = (direction==HORIZONTAL)?"backIcon.png":"pageUpIcon.png";
+  string nexticn = (direction==HORIZONTAL)?"nextIcon.png":"pageDownIcon.png";
+  prevPageBtn = createImageButton("PrevAppsPage",
+                                  ImageFileFormat::loadFrom(assetFile(previcn)));
+  nextPageBtn = createImageButton("NextAppsPage",
+                                  ImageFileFormat::loadFrom(assetFile(nexticn)));
+
   if(!parent) parent = this;
   parent->addChildComponent(nextPageBtn);
   parent->addChildComponent(prevPageBtn, 500);
@@ -84,8 +90,16 @@ void AppListComponent::resized() {
   
   prevPageBtn->setSize(btnHeight, btnHeight);
   nextPageBtn->setSize(btnHeight, btnHeight);
-  prevPageBtn->setBoundsToFit(b.getX(), b.getY(), b.getWidth(), b.getHeight(), Justification::centredLeft, true);
-  nextPageBtn->setBoundsToFit(b.getX(), b.getY(), 480, b.getHeight(), Justification::centredRight, true);
+  if(direction == HORIZONTAL){    
+    prevPageBtn->setBoundsToFit(b.getX(), b.getY(), b.getWidth(), b.getHeight(), Justification::centredLeft, true);
+    nextPageBtn->setBoundsToFit(b.getX(), b.getY(), 480, b.getHeight(), Justification::centredRight, true);
+
+  }else if(direction == VERTICAL){
+    
+    prevPageBtn->setBoundsToFit(b.getX(), b.getY(), b.getWidth(), b.getHeight(), Justification::centredTop, true);
+    nextPageBtn->setBoundsToFit(b.getX(), b.getY(), b.getWidth(), b.getHeight(), Justification::centredBottom, true);
+
+  }
   
   // drop the page buttons from our available layout size
   auto gridWidth = b.getWidth();
@@ -143,8 +157,8 @@ Array<DrawableButton *> AppListComponent::createIconsFromJsonArray(const var &js
   return buttons;
 }
 
-AppsPageComponent::AppsPageComponent(LauncherComponent* launcherComponent) :
-  AppListComponent(launcherComponent),
+AppsPageComponent::AppsPageComponent(LauncherComponent* launcherComponent, bool horizontal) :
+  AppListComponent(launcherComponent, horizontal),
   launcherComponent(launcherComponent),
   runningCheckTimer(),
   debounceTimer(),
@@ -162,6 +176,7 @@ AppsPageComponent::AppsPageComponent(LauncherComponent* launcherComponent) :
   addAndMakeVisible(trashButton, 100);
   trashButton->setBounds(170, 15, 40, 20);
   trashButton->setVisible(false);
+  setWantsKeyboardFocus(true);
 }
 
 AppsPageComponent::~AppsPageComponent() {}
@@ -380,6 +395,27 @@ void AppsPageComponent::buttonClicked(const MouseEvent& me){
     auto appButton = (AppIconButton*)button;
     startOrFocusApp(appButton);
   }
+}
+
+bool AppsPageComponent::keyPressed(const KeyPress& key){
+  int code = key.getKeyCode();
+  int up = KeyPress::upKey;
+  int down = KeyPress::downKey;
+  int left = KeyPress::leftKey;
+  int right = KeyPress::rightKey;
+
+  if(code == up){
+    /* Case Up */
+  } else if (code == down) {
+    /* Case Down */
+  } else if (code == left) {
+    /* Case Left */
+  } else if (code == right) {
+    /* Case Right */
+  } else {
+    return false;
+  }
+  return true;
 }
 
 void AppsPageComponent::mouseUp(const MouseEvent& me){

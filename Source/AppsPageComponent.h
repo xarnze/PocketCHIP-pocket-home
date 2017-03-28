@@ -32,9 +32,14 @@ public:
   Rectangle<float> getImageBounds() const override;
 };
 
-class AppListComponent : public Component, public Button::Listener{
+enum NavDirection{
+  HORIZONTAL, VERTICAL
+};
+
+class AppListComponent : 
+public Component, public Button::Listener{
 public:
-  AppListComponent(Component* parent = nullptr);
+  AppListComponent(Component* parent = nullptr, bool = true);
   ~AppListComponent();
   
   ScopedPointer<Grid> grid;
@@ -65,6 +70,7 @@ public:
   
 private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AppListComponent)
+    NavDirection direction;
 };
 
 enum Choices{
@@ -73,7 +79,6 @@ enum Choices{
   MOVERIGHT = 3,
   DELETE    = 4
 };
-
 
 class EditWindow: public Component, public Button::Listener{
 public:
@@ -105,7 +110,7 @@ private:
 
 class AppsPageComponent : public AppListComponent{
 public:
-  AppsPageComponent(LauncherComponent* launcherComponent);
+  AppsPageComponent(LauncherComponent* launcherComponent, bool);
   ~AppsPageComponent();
   
   Array<DrawableButton *> createIconsFromJsonArray(const var &json) override;
@@ -117,6 +122,7 @@ public:
   void buttonClicked(const MouseEvent&);
   void mouseDrag(const MouseEvent&) override;
   void mouseUp(const MouseEvent&) override;
+  bool keyPressed (const KeyPress &) override;
   
   void checkRunningApps();
   
