@@ -343,7 +343,7 @@ void LauncherComponent::resized() {
   
   clock->getLabel().setBounds(bounds.getX()+370, bounds.getY(), 80, 50);
 
-  labelip.setBounds(bounds.getX()+190, bounds.getY(), 100, 50);
+  labelip.setBounds(bounds.getX()+190, bounds.getY(), 100, 30);
   // init
   if (!resize) {
     resize = true;
