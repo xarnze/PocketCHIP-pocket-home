@@ -102,11 +102,24 @@ void GridPage::resized() {}
 
 Grid::Grid(int numCols, int numRows) :
   numCols(numCols),
-  numRows(numRows)
+  numRows(numRows),
+  selection(new DrawableImage()),
+  selectindex(0)
 {
   page = new GridPage(numCols, numRows);
   pages.add(page);
+
+  /* We need to put this line here to have the selection
+   * under the icons and not over */
+  addAndMakeVisible(selection);
+  selection->setVisible(false);
+
   addAndMakeVisible(page);
+
+  //Selection square
+  Image image = createImageFromFile(assetFile("llselection.png"));
+  selection->setImage(image);
+  selection->setName("Select");
 
   // mildly convoluted way of finding proportion of available height to give each row,
   // accounting for spacer rows which are relatively heighted based on this measure.
@@ -187,9 +200,51 @@ void Grid::shiftIcons(int index){
   shiftIcons(nextpage);
 }
 
+/**
+ * Returns whether a new page has been displayed or not
+ */
+bool Grid::selectNext(int off){
+  selection->setVisible(true);
+  int total = page->items.size();
+
+  if(selectindex + off >= total  && !hasNextPage())
+    return false;
+
+  selectindex += off;
+  if(selectindex >= total){
+    selectindex %= total;
+    showNextPage();
+    return true;
+  } else {
+    resized();
+  }
+  return false;
+}
+
+bool Grid::selectPrevious(int off){
+  selection->setVisible(true);
+  if(selectindex == 0 && !hasPrevPage())
+    return false;
+
+  int total = numCols*numRows;
+  selectindex -= off;
+  if(selectindex < 0){
+    selectindex = (selectindex + total)%total;
+    showPrevPage();
+    return true;
+  } else {
+    resized();
+  }
+  return false;
+}
+
+Component* Grid::getSelected(){
+  return page->items[selectindex];
+}
+
 void Grid::resized() {
   const auto& bounds = getLocalBounds();
-  
+
   // create row components list for use in stretch layout
   // include room for rows and spacers
   int numRowComps = (2*page->gridRows.size()) - 1;
@@ -213,11 +268,17 @@ void Grid::resized() {
   }
   
   // get row height
-  auto rowHeight = bounds.getHeight() * rowProp;
-  
+  double rowHeight = bounds.getHeight() * rowProp;
+  double colWidth  = bounds.getWidth() * colProp;
+
   // size from largest to smallest, stretchable
   // set page size to grid size
   page->setBounds(bounds);
+  
+  //Draw selection rectangle at first
+  int x = 12+(selectindex%numCols)*((int) colWidth);
+  int y = (selectindex/numCols)*(rowHeight+10);
+  selection->setBounds(bounds.getX()+x, bounds.getY()+y, 100, 100);
   
   // lay out components, size the rows first
   rowLayout.layOutComponents(rowComps, numRowComps, bounds.getX(), bounds.getY(),
@@ -232,6 +293,7 @@ void Grid::resized() {
                                bounds.getWidth(), rowHeight,
                                false, true);
   }
+
 }
 
 bool Grid::hasPrevPage() {
@@ -251,6 +313,7 @@ void Grid::showPageAtIndex(int idx) {
   addAndMakeVisible(page);
   page->setVisible(true);
   page->setEnabled(true);
+
   resized();
 }
 
@@ -263,14 +326,14 @@ void Grid::showPrevPage() {
   if (hasPrevPage()) {
     int i = pages.indexOf(page);
     showPageAtIndex(i-1);
-  };
+  }
 }
 
 void Grid::showNextPage() {
   if (hasNextPage()) {
     int i = pages.indexOf(page);
     showPageAtIndex(i+1);
-  };
+  }
 }
 
 /* Method exchanging the place of selected icon (item) with 

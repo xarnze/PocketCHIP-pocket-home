@@ -46,7 +46,10 @@ public:
   void resized() override;
   bool moveLeft(Component*);
   bool moveRight(Component*);
-  
+  bool selectNext(int off = 1);
+  bool selectPrevious(int off = 1);
+  Component* getSelected();
+
 private:
   void shiftIcons(int);
 
@@ -56,6 +59,8 @@ private:
   double rowProp;
   double rowSpacerProp;
   double colProp;
+  ScopedPointer<DrawableImage> selection;
+  int selectindex;
   
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Grid)
 };

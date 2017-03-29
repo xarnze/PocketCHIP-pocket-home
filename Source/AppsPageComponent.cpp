@@ -45,6 +45,7 @@ AppListComponent::AppListComponent(Component* parent, bool ishorizontal) :
   nextPageBtn = createImageButton("NextAppsPage",
                                   ImageFileFormat::loadFrom(assetFile(nexticn)));
 
+  
   if(!parent) parent = this;
   parent->addChildComponent(nextPageBtn);
   parent->addChildComponent(prevPageBtn, 500);
@@ -55,6 +56,7 @@ AppListComponent::AppListComponent(Component* parent, bool ishorizontal) :
   
   addAndMakeVisible(grid);
 }
+
 AppListComponent::~AppListComponent() {}
 
 void AppListComponent::next(){
@@ -100,7 +102,6 @@ void AppListComponent::resized() {
     nextPageBtn->setBoundsToFit(b.getX(), b.getY(), b.getWidth(), b.getHeight(), Justification::centredBottom, true);
 
   }
-  
   // drop the page buttons from our available layout size
   auto gridWidth = b.getWidth();
   auto gridHeight = b.getHeight() - (2.0*btnHeight);
@@ -176,6 +177,7 @@ AppsPageComponent::AppsPageComponent(LauncherComponent* launcherComponent, bool 
   addAndMakeVisible(trashButton, 100);
   trashButton->setBounds(170, 15, 40, 20);
   trashButton->setVisible(false);
+  // Focus keyboard needed for the key listener
   setWantsKeyboardFocus(true);
 }
 
@@ -398,23 +400,33 @@ void AppsPageComponent::buttonClicked(const MouseEvent& me){
 }
 
 bool AppsPageComponent::keyPressed(const KeyPress& key){
-  int code = key.getKeyCode();
-  int up = KeyPress::upKey;
-  int down = KeyPress::downKey;
-  int left = KeyPress::leftKey;
-  int right = KeyPress::rightKey;
+  const int code = key.getKeyCode();
+  const int up = KeyPress::upKey;
+  const int down = KeyPress::downKey;
+  const int left = KeyPress::leftKey;
+  const int right = KeyPress::rightKey;
+  const int enter = KeyPress::returnKey;
 
+  bool newpage = false;
   if(code == up){
     /* Case Up */
+    newpage = grid->selectPrevious(grid->numCols);
   } else if (code == down) {
     /* Case Down */
+    newpage = grid->selectNext(grid->numCols);
   } else if (code == left) {
     /* Case Left */
+    newpage = grid->selectPrevious();
   } else if (code == right) {
     /* Case Right */
+    newpage = grid->selectNext();
+  } else if (code == enter) {
+    AppIconButton* button = (AppIconButton*) grid->getSelected();
+    startOrFocusApp(button);    
   } else {
     return false;
   }
+  if(newpage) checkShowPageNav();
   return true;
 }
 

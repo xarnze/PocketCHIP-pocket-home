@@ -70,7 +70,7 @@ public:
   
 private:
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AppListComponent)
-    NavDirection direction;
+  NavDirection direction;
 };
 
 enum Choices{
@@ -150,7 +150,7 @@ private:
   
   //Trash Icon
   ScopedPointer<ImageButton> trashButton;
-  
+
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AppsPageComponent)
   
   //Store mouse dragged event X and Y
