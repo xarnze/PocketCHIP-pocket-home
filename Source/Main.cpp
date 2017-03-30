@@ -2,6 +2,8 @@
 #include "MainComponent.h"
 #include "WifiStatus.h"
 #include "Utils.h"
+#include <sys/types.h>
+#include <sys/wait.h>
 
 // FIXME: this is a hack to fix touch screen presses causing buzzing
 // when no application holds alsa open
@@ -175,16 +177,23 @@ void PokeLaunchApplication::initialise(const String &commandLine) {
   if (!configJson) {
     bool launch = AlertWindow::showOkCancelBox(AlertWindow::AlertIconType::WarningIcon,
 	"Cannot launch Pocket-Home",
-	"There was an error parsing the configuration file (due to a syntax error)\n \
-	Do you want to launch a terminal now to correct the file ?",
+	"Home configuartion could not be read\n\
+Do you want to restore the default \n \
+configuration automatically ?",
 	"Yes",
-	"No");
+	"No, let me do it");
     if(launch){
-     execlp("vala-terminal", "vala-terminal", "-fs", "8", "-g", "20", "20", 0); 
+      int pid = vfork();
+      if(!pid)
+        execlp("cp", 
+               "cp", 
+               "/usr/share/pocket-home/config.json", 
+               "/home/chip/.pocket-home/", NULL);
+      wait(NULL);
+      execlp("pocket-home", "pocket-home", NULL);
     }
     else{
-      std::cerr << "Could not parse config file: " << configFile.getFullPathName() << std::endl;
-      quit();
+      execlp("vala-terminal", "vala-terminal", "-fs", "8", "-g", "20", "20", 0);
     }
   }
 
