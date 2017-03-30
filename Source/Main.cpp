@@ -193,7 +193,10 @@ configuration automatically ?",
       execlp("pocket-home", "pocket-home", NULL);
     }
     else{
-      execlp("vala-terminal", "vala-terminal", "-fs", "8", "-g", "20", "20", 0);
+      execlp("vala-terminal", 
+             "vala-terminal", 
+             "-fs", "8", 
+             "-g", "20", "20", NULL);
     }
   }
 
