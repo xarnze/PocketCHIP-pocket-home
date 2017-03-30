@@ -223,11 +223,12 @@ bool Grid::selectNext(int off){
 
 bool Grid::selectPrevious(int off){
   selection->setVisible(true);
-  if(selectindex == 0 && !hasPrevPage())
+  if(selectindex - off < 0 && !hasPrevPage())
     return false;
 
   int total = numCols*numRows;
   selectindex -= off;
+
   if(selectindex < 0){
     selectindex = (selectindex + total)%total;
     showPrevPage();

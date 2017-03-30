@@ -279,8 +279,8 @@ void AppsPageComponent::checkRunningApps() {
 };
 
 void AppsPageComponent::buttonStateChanged(Button* btn) {
-  auto appBtn = (AppIconButton*)btn;
-  auto appIcon = (DrawableImage*)appBtn->getCurrentImage();
+  AppIconButton* appBtn = (AppIconButton*)btn;
+  DrawableImage* appIcon = (DrawableImage*)appBtn->getCurrentImage();
   auto buttonPopup = launcherComponent->focusButtonPopup.get();
   constexpr auto scale = 1.3;
 
