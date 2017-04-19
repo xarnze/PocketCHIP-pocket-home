@@ -3,6 +3,9 @@
 
 #include <sys/types.h>
 #include <unistd.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <linux/i2c-dev.h>
        
 BatteryMonitor::BatteryMonitor( )
   : Thread( "BatteryMonitor" ) {
@@ -31,34 +34,27 @@ int BatteryMonitor::addAndCalculateAverage(int cur){
 }
 
 void BatteryMonitor::updateStatus() {
-  
-  //Now, we use i2cget to get the battery status (Charging or not)
-  String command = "/usr/sbin/i2cget -y -f 0 0x34 0x00";
-  ChildProcess stat;
-  stat.start(command);
-  stat.waitForProcessToFinish(2);
-  String strstatus = stat.readAllProcessOutput();
-  //We need to get the exit status to avoid having a defunct process
-  stat.getExitCode();
-  strstatus = strstatus.trim();
-  int value = std::stoul(strstatus.toRawUTF8(), nullptr, 16);
-  status.isCharging = (value != 0);
-  
-  //Now, we use i2cget to get the battery percentage, it's more accurate
-  String cmd = "/usr/sbin/i2cget -y -f 0 0x34 0x0b9";
-  ChildProcess perc;
-  perc.start(cmd);
-  perc.waitForProcessToFinish(2);
-  String strpercentage = perc.readAllProcessOutput();
-  //We need to get the exit status to avoid having a defunct process
-  perc.getExitCode();
-  strpercentage = strpercentage.trim();
-  int x = std::stoul(strpercentage.toRawUTF8(), nullptr, 16);
-  
-  //No need to have a modulo of 5 now, let's get the average
-  x = addAndCalculateAverage(x);
+  //Open the i2c bus
+  int file_i2c = open("/dev/i2c-0", O_RDWR);
+  //Failed to open
+  if (file_i2c < 0) return;
+  // Get access to the battery charging info
+  if (ioctl(file_i2c, I2C_SLAVE_FORCE, 0x34) < 0) return;
+
+  // create a buffer for the registers
+  unsigned char reg[512];
     
-  status.percentage = x;
+  // Set the charging status
+  int loc=0;
+  if (write(file_i2c, &loc, 1) < 0) return;
+  read(file_i2c, reg, 0xff);
+  status.isCharging = (reg[0] != 0);
+
+  // Set the battery percentage  
+  loc=0xb9;
+  if (write(file_i2c, &loc, 1) < 0) return;
+  read(file_i2c, reg, 0xff);
+  status.percentage = addAndCalculateAverage(reg[0]);
 }
 
 void BatteryMonitor::run( ) {
