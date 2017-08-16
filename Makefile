@@ -25,8 +25,10 @@ wifitest:
 	cd Builds/LinuxMakefile && $(MAKE) -f UnitTests.mk ../../build/$(CONFIG)/wifitest
 
 pack: all
-	cp build/Release/pocket-home debian/usr/bin/ && \
-	./pack-debian.sh $(VERSION) $(BUILD)
+	mkdir -p pack-debian/usr/bin/ pack-debian/usr/share/pocket-home/
+	cp build/Release/pocket-home pack-debian/usr/bin/
+	cp -R assets/* pack-debian/usr/share/pocket-home/
+	fakeroot dpkg-deb --build pack-debian pocket-home_$(VERSION)-$(BUILD)_armhf.deb
 
 install: pack
 	sudo dpkg -i pocket-home_$(VERSION)-$(BUILD)_armhf.deb
