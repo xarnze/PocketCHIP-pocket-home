@@ -35,7 +35,7 @@ Rectangle<float> AppIconButton::getImageBounds() const {
 }
 
 AppListComponent::AppListComponent(Component* parent, bool ishorizontal) :
-  grid(new Grid(3, 2)),
+  grid(ishorizontal ? new Grid(3, 2) : new Grid(2, 3)),
   direction(ishorizontal?HORIZONTAL:VERTICAL)
 {
   string previcn = (direction==HORIZONTAL)?"backIcon.png":"pageUpIcon.png";
