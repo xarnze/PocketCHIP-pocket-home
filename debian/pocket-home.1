@@ -1,10 +1,10 @@
 .\"                                      Hey, EMACS: -*- nroff -*-
-.\" (C) Copyright 2016 Andrew Hay Kurtz <andrew.hay.kurtz@gmail.com>,
+.\" (C) Copyright 2017 Stephen Paul Weber <singpolyma@singpolyma.net>,
 .\"
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH POCKET-HOME SECTION "March 23, 2016"
+.TH POCKET-HOME 1 "August 17, 2017"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -18,39 +18,24 @@
 .\" .sp <n>    insert n+1 empty lines
 .\" for manpage-specific macros, see man(7)
 .SH NAME
-pocket-home \- program to do something
+pocket-home \- home screen for PocketCHIP
 .SH SYNOPSIS
 .B pocket-home
-.RI [ options ] " files" ...
-.br
-.B bar
-.RI [ options ] " files" ...
+.RI [ options ]
 .SH DESCRIPTION
 This manual page documents briefly the
 .B pocket-home
-and
-.B bar
-commands.
+command.
 .PP
 .\" TeX users may be more comfortable with the \fB<whatever>\fP and
 .\" \fI<whatever>\fP escape sequences to invode bold face and italics,
 .\" respectively.
-\fBpocket-home\fP is a program that...
+\fBpocket-home\fP provides a lightweight menu, status indicators, and
+settings for mobile devices.
 .SH OPTIONS
-These programs follow the usual GNU command line syntax, with long
-options starting with two dashes (`-').
-A summary of options is included below.
-For a complete description, see the Info files.
 .TP
-.B \-h, \-\-help
+.B \-\-help
 Show summary of options.
 .TP
-.B \-v, \-\-version
-Show version of program.
-.SH SEE ALSO
-.BR bar (1),
-.BR baz (1).
-.br
-The programs are documented fully by
-.IR "The Rise and Fall of a Fooish Bar" ,
-available via the Info system.
+.B \-\-fakewifi
+Use fake WiFi status.
