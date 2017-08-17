@@ -516,11 +516,12 @@ void AppsPageComponent::updateIcon(AppIconButton* icon, EditWindow* ew){
 
 void AppsPageComponent::manageChoice(AppIconButton* icon, int choice){
   EditWindow* ew;
+  auto b = getLocalBounds();
   
   bool answer;
   switch(choice){
     case EDIT:
-      ew = new EditWindow(icon);
+      ew = new EditWindow(icon, b.getWidth(), b.getHeight());
       addAndMakeVisible(ew);
       answer = ew->invoke();
       if(answer) updateIcon(icon, ew);
@@ -589,7 +590,8 @@ void NavigationListener::buttonClicked(Button *button){
     else page->previous();
 }
 
-EditWindow::EditWindow(AppIconButton* button): button(button),
+EditWindow::EditWindow(AppIconButton* button, int w, int h):
+button(button),
 lname("name", "Name: "), licon("icon", "Icon path: "), 
 lshell("shell", "Shell command: "),
 apply("Apply", "Apply"), cancel("Cancel"),
@@ -607,10 +609,10 @@ browse("..."), choice(0)
   licon.setColour(Label::ColourIds::textColourId, Colours::black);
   lshell.setColour(Label::ColourIds::textColourId, Colours::black);
   
-  int size = 380;
+  int size = w;
   int gap = 30;
   int sizebrowse = 35;
-  this->setBounds(0, 30, size, 212);
+  this->setBounds(0, 30, size, h);
   
   int width = (size-150)/2;
   apply.setBounds(gap, 172, width, 30);
@@ -683,7 +685,9 @@ void EditWindow::buttonClicked(Button* button){
                                     browser,
                                     false,
                                     Colours::lightgrey);
-    if(dialogBox.show(480,272)){
+
+    auto b = getLocalBounds();
+    if(dialogBox.show(b.getWidth(),b.getHeight())){
       File selectedFile = browser.getSelectedFile(0);
       String path = selectedFile.getFullPathName();
       icon.setText(path);
