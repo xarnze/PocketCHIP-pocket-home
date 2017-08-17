@@ -338,8 +338,7 @@ void LauncherComponent::resized() {
                         barSize);
   botButtons->setBounds(bounds.getX(), bounds.getHeight() - barSize, bounds.getWidth(),
                              barSize);
-  pageStack->setBounds(bounds.getX() + barSize, bounds.getY(), bounds.getWidth() - 2*barSize,
-                       bounds.getHeight());
+  pageStack->setBounds(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
   launchSpinner->setBounds(0, 0, bounds.getWidth(), bounds.getHeight());
   
   batteryLabel->setBounds(bounds.getX()+40, bounds.getY(), 50, 50);

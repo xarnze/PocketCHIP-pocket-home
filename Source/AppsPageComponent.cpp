@@ -92,9 +92,9 @@ void AppListComponent::resized() {
   
   prevPageBtn->setSize(btnHeight, btnHeight);
   nextPageBtn->setSize(btnHeight, btnHeight);
-  if(direction == HORIZONTAL){    
+  if(direction == HORIZONTAL){
     prevPageBtn->setBoundsToFit(b.getX(), b.getY(), b.getWidth(), b.getHeight(), Justification::centredLeft, true);
-    nextPageBtn->setBoundsToFit(b.getX(), b.getY(), 480, b.getHeight(), Justification::centredRight, true);
+    nextPageBtn->setBoundsToFit(b.getX(), b.getY(), b.getWidth(), b.getHeight(), Justification::centredRight, true);
 
   }else if(direction == VERTICAL){
     
@@ -103,7 +103,7 @@ void AppListComponent::resized() {
 
   }
   // drop the page buttons from our available layout size
-  auto gridWidth = b.getWidth();
+  auto gridWidth = b.getWidth() - (2.0*btnHeight);
   auto gridHeight = b.getHeight() - (2.0*btnHeight);
   grid->setSize(gridWidth, gridHeight);
   grid->setBoundsToFit(b.getX(), b.getY(), b.getWidth(), b.getHeight(), Justification::centred, true);
