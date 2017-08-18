@@ -34,13 +34,13 @@ File assetFile(const String &fileName) {
 }
 
 Image createImageFromFile(const File &imageFile) {
-  auto image = Image(Image::RGB, 128, 128, true);
+  auto image = Image(Image::ARGB, 128, 128, true);
   if (imageFile.getFileExtension() == ".svg") {
     ScopedPointer<XmlElement> svgElement = XmlDocument::parse(imageFile);
     ScopedPointer<Drawable> svgDrawable = Drawable::createFromSVG(*svgElement);
     Graphics g(image);
     svgDrawable->drawWithin(g, Rectangle<float>(0, 0, image.getWidth(), image.getHeight()),
-                            RectanglePlacement::fillDestination, 1.0f);
+                            RectanglePlacement::centred, 1.0f);
   } else {
     image = ImageFileFormat::loadFrom(imageFile);
   }
