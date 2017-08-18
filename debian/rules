@@ -4,7 +4,11 @@ DPKG_EXPORT_BUILDFLAGS = 1
 include /usr/share/dpkg/default.mk
 
 %:
-	TARGET_ARCH=-march=armv7 \
-	CXX=arm-linux-gnueabihf-g++ \
-	LD_FLAGS="-L/usr/lib/arm-linux-gnueabihf -lxcb -lXau -lXdmcp -lpng -lz" \
 	dh $@ --parallel
+
+# Everything install by install file
+override_dh_auto_install:
+	true
+
+override_dh_install:
+	dh_install --exclude=Lato-Regular.ttf

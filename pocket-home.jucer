@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="EFuQKG" name="pocket-home" projectType="guiapp" version="0.0.1"
               bundleIdentifier="co.nextthing.PokeLaunch" includeBinaryInAppConfig="1"
-              jucerVersion="4.2.3" companyName="Next Thing Co." companyWebsite="http://nextthing.co">
+              jucerVersion="4.3.0" companyName="Next Thing Co." companyWebsite="http://nextthing.co">
   <MAINGROUP id="NYF1Vz" name="pocket-home">
     <GROUP id="{A1DF3F2A-774E-D561-3D99-5D88F7D2D731}" name="assets">
       <FILE id="lJvIsl" name="bluetooth.json" compile="0" resource="1" file="assets/bluetooth.json"/>
@@ -12,6 +12,29 @@
       <FILE id="e8kBas" name="wifi.json" compile="0" resource="1" file="assets/wifi.json"/>
     </GROUP>
     <GROUP id="{4593A345-C350-960A-058D-B48F8240AA1D}" name="Source">
+      <FILE id="Oo8gXi" name="AdvancedSettingsPage.cpp" compile="1" resource="0"
+            file="Source/AdvancedSettingsPage.cpp"/>
+      <FILE id="WN9Xea" name="AdvancedSettingsPage.h" compile="0" resource="0"
+            file="Source/AdvancedSettingsPage.h"/>
+      <FILE id="pkDsWS" name="ClockMonitor.cpp" compile="1" resource="0"
+            file="Source/ClockMonitor.cpp"/>
+      <FILE id="ofQnwi" name="ClockMonitor.hpp" compile="0" resource="0"
+            file="Source/ClockMonitor.hpp"/>
+      <FILE id="epQH2R" name="DateTimePage.cpp" compile="1" resource="0"
+            file="Source/DateTimePage.cpp"/>
+      <FILE id="ZRujL4" name="DateTimePage.h" compile="0" resource="0" file="Source/DateTimePage.h"/>
+      <FILE id="vtFBhi" name="InputSettingsPage.cpp" compile="1" resource="0"
+            file="Source/InputSettingsPage.cpp"/>
+      <FILE id="lOaFb8" name="InputSettingsPage.h" compile="0" resource="0"
+            file="Source/InputSettingsPage.h"/>
+      <FILE id="dGWMDB" name="PersonalizePageComponent.cpp" compile="1" resource="0"
+            file="Source/PersonalizePageComponent.cpp"/>
+      <FILE id="RRMvGD" name="PersonalizePageComponent.h" compile="0" resource="0"
+            file="Source/PersonalizePageComponent.h"/>
+      <FILE id="Ds9kKz" name="SettingsPageLogin.cpp" compile="1" resource="0"
+            file="Source/SettingsPageLogin.cpp"/>
+      <FILE id="r3n3Fp" name="SettingsPageLogin.h" compile="0" resource="0"
+            file="Source/SettingsPageLogin.h"/>
       <FILE id="flS9A2" name="Grid.cpp" compile="1" resource="0" file="Source/Grid.cpp"/>
       <FILE id="RsGKce" name="Grid.h" compile="0" resource="0" file="Source/Grid.h"/>
       <FILE id="eKYlUb" name="PowerPageFelComponent.cpp" compile="1" resource="0"
@@ -107,13 +130,13 @@
       </MODULEPATHS>
     </XCODE_MAC>
     <LINUX_MAKE targetFolder="Builds/LinuxMakefile" cppLanguageStandard="-std=c++11"
-                extraDefs="" extraLinkerFlags="$(PKG_CONFIG_LDFLAGS)" externalLibraries=""
-                extraCompilerFlags="$(PKG_CONFIG_CFLAGS)">
+                extraDefs="" extraLinkerFlags="" externalLibraries="" extraCompilerFlags=""
+                linuxExtraPkgConfig="NetworkManager libnm-glib alsa freetype2">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
-                       targetName="pocket-home" binaryPath="build/Debug"/>
+                       targetName="pocket-home" binaryPath="build/Debug" headerPath=""/>
         <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="3"
-                       targetName="pocket-home" binaryPath="build/Release"/>
+                       targetName="pocket-home" binaryPath="build/Release" headerPath=""/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="deps/JUCE/modules"/>

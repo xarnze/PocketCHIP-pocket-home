@@ -1,2 +1,3 @@
-tar-ignore = ".git/*"
+diff-ignore
+tar-ignore
 tar-ignore = "Builds/MacOSX"
