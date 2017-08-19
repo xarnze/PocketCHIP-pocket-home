@@ -6,18 +6,6 @@
 
 #include <numeric>
 
-void PowerSpinnerTimer::timerCallback() {
-    if (powerComponent) {
-        auto lsp = powerComponent->powerSpinner.get();
-        const auto& lspImg = powerComponent->launchSpinnerImages;
-        i++;
-        if (i == lspImg.size()) { i = 0; }
-      
-        lsp->setImage(lspImg[i]);
-        
-    }
-}
-
 unsigned char PowerPageComponent::rev_number = 9;
 unsigned char PowerPageComponent::bug_number = 0;
 
@@ -61,17 +49,10 @@ PowerPageComponent::PowerPageComponent() {
     felButton->setButtonText("Flash Software");
     felButton->addListener(this);
     addAndMakeVisible(felButton);
-  
-    powerSpinnerTimer.powerComponent = this;
-    Array<String> spinnerImgPaths{"wait0.png","wait1.png","wait2.png","wait3.png","wait4.png","wait5.png","wait6.png","wait7.png"};
-    for(auto& path : spinnerImgPaths) {
-        auto image = createImageFromFile(assetFile(path));
-        launchSpinnerImages.add(image);
-    }
-    powerSpinner = new ImageComponent();
-    powerSpinner->setImage(launchSpinnerImages[0]);
-    addChildComponent(powerSpinner);
-  
+
+    overlaySpinner = new OverlaySpinner();
+    addChildComponent(overlaySpinner);
+
   buildName = "Build: ";
   auto releaseFileName = absoluteFileFromPath( "/etc/os-release" );
   File releaseFile( releaseFileName );
@@ -136,7 +117,7 @@ void PowerPageComponent::paint(Graphics &g) {
 void PowerPageComponent::resized() {
   
   auto bounds = getLocalBounds();
-   powerSpinner->setBounds(0, 0, bounds.getWidth(), bounds.getHeight());
+  overlaySpinner->setBounds(0, 0, bounds.getWidth(), bounds.getHeight());
 
   {
     unsigned int number = 4;
@@ -197,8 +178,7 @@ void PowerPageComponent::showPowerSpinner() {
     sleepButton->setVisible(false);
     rebootButton->setVisible(false);
     felButton->setVisible(false);
-    powerSpinner->setVisible(true);
-    powerSpinnerTimer.startTimer(1*1000);
+    overlaySpinner->setVisible(true);
 }
 
 void PowerPageComponent::buttonStateChanged(Button *btn) {
