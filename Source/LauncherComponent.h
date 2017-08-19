@@ -2,6 +2,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+#include "OverlaySpinner.h"
 #include "LauncherBarComponent.h"
 #include "PageStackComponent.h"
 #include "BatteryMonitor.h"
@@ -19,18 +20,6 @@
 class LauncherComponent;
 class LibraryPageComponent;
 class AppsPageComponent;
-
-class LaunchSpinnerTimer : public Timer {
-public:
-    LaunchSpinnerTimer() {};
-    void timerCallback();
-  
-    LauncherComponent* launcherComponent;
-  
-    int i = 0;
-    int t = 0;
-    int timeout = 30 * 1000;
-};
 
 class BatteryIconTimer : public Timer {
 public:
@@ -51,12 +40,9 @@ public:
     BatteryMonitor batteryMonitor;
     ScopedPointer<LauncherBarComponent> botButtons;
     ScopedPointer<LauncherBarComponent> topButtons;
-    ScopedPointer<Component> launchSpinner;
-    ScopedPointer<ImageComponent> launchSpinnerBackground;
-    ScopedPointer<ImageComponent> launchSpinnerImage;
+    ScopedPointer<OverlaySpinner> launchSpinner;
     ScopedPointer<ImageComponent> focusButtonPopup;
   
-    Array<Image> launchSpinnerImages;
     Array<Image> batteryIconImages;
     Array<Image> batteryIconChargingImages;
     Array<Image> wifiIconImages;
@@ -64,7 +50,6 @@ public:
     ScopedPointer<Label> batteryLabel;
     ScopedPointer<Label> modeLabel;
   
-    LaunchSpinnerTimer launchSpinnerTimer;
     BatteryIconTimer batteryIconTimer;
     WifiIconTimer wifiIconTimer;
     Component* defaultPage;

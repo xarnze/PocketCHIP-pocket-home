@@ -57,6 +57,7 @@ ifeq ($(CONFIG),Release)
 endif
 
 OBJECTS := \
+  $(JUCE_OBJDIR)/OverlaySpinner_80e19ab2.o \
   $(JUCE_OBJDIR)/AdvancedSettingsPage_6068151d.o \
   $(JUCE_OBJDIR)/ClockMonitor_d7cf07f5.o \
   $(JUCE_OBJDIR)/DateTimePage_7bef7c53.o \
@@ -111,6 +112,11 @@ clean:
 strip:
 	@echo Stripping pocket-home
 	-@$(STRIP) --strip-unneeded $(JUCE_OUTDIR)/$(TARGET)
+
+$(JUCE_OBJDIR)/OverlaySpinner_80e19ab2.o: ../../Source/OverlaySpinner.cpp
+	-@mkdir -p $(JUCE_OBJDIR)
+	@echo "Compiling OverlaySpinner.cpp"
+	@$(CXX) $(JUCE_CXXFLAGS) -o "$@" -c "$<"
 
 $(JUCE_OBJDIR)/AdvancedSettingsPage_6068151d.o: ../../Source/AdvancedSettingsPage.cpp
 	-@mkdir -p $(JUCE_OBJDIR)

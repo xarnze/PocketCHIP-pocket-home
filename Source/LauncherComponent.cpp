@@ -9,26 +9,6 @@
 #include <math.h>
 #include <algorithm>
 
-void LaunchSpinnerTimer::timerCallback() {
-  if (launcherComponent) {
-    auto lsp = launcherComponent->launchSpinnerImage.get();
-    const auto& lspImg = launcherComponent->launchSpinnerImages;
-    
-    // change image
-    i++;
-    if (i == lspImg.size()) { i = 0; }
-    lsp->setImage(lspImg[i]);
-    
-    // check timeout
-    t += getTimerInterval();
-    if (t > timeout) {
-      t = 0;
-      lsp->setVisible(false);
-      stopTimer();
-    }
-  }
-}
-
 void BatteryIconTimer::timerCallback() {
   
   // get current battery status from the battery monitor thread
@@ -218,25 +198,7 @@ clock(nullptr), labelip("ip", "")
     batteryIconChargingImages.add(image);
   }
 
-  launchSpinnerTimer.launcherComponent = this;
-  Array<String> spinnerImgPaths{"wait0.png","wait1.png","wait2.png","wait3.png","wait4.png","wait5.png","wait6.png","wait7.png"};
-  for(auto& path : spinnerImgPaths) {
-    auto image = createImageFromFile(assetFile(path));
-    launchSpinnerImages.add(image);
-  }
-  
-  launchSpinner = new Component();
-
-  launchSpinnerBackground = new ImageComponent();
-  Image launchSpinnerBackgroundImage(Image::ARGB, 1, 1, true);
-  launchSpinnerBackgroundImage.setPixelAt(0, 0, Colour((uint8)254, 255, 255, (uint8)201));
-  launchSpinnerBackground->setImage(launchSpinnerBackgroundImage, RectanglePlacement::stretchToFit);
-  launchSpinner->addAndMakeVisible(launchSpinnerBackground);
-
-  launchSpinnerImage = new ImageComponent();
-  launchSpinnerImage->setImage(launchSpinnerImages[0], RectanglePlacement::centred);
-  launchSpinner->addAndMakeVisible(launchSpinnerImage);
-
+  launchSpinner = new OverlaySpinner();
   addChildComponent(launchSpinner);
   
   focusButtonPopup = new ImageComponent("Focus Button Popup");
@@ -348,14 +310,6 @@ void LauncherComponent::resized() {
                        bounds.getHeight());
 
   launchSpinner->setBounds(0, 0, bounds.getWidth(), bounds.getHeight());
-  launchSpinnerBackground->setBounds(0, 0, bounds.getWidth(), bounds.getHeight());
-  int spinnerSize = bounds.getHeight() / 10;
-  launchSpinnerImage->setBounds(
-    (bounds.getWidth() - spinnerSize) / 2,
-    (bounds.getHeight() - spinnerSize) / 2,
-    spinnerSize,
-    spinnerSize
-  );
   
   batteryLabel->setBounds(bounds.getX()+40, bounds.getY(), 50, 50);
   
@@ -409,12 +363,10 @@ void LauncherComponent::addIcon(const String& name, const String& path, const St
 void LauncherComponent::showLaunchSpinner() {
   DBG("Show launch spinner");
   launchSpinner->setVisible(true);
-  launchSpinnerTimer.startTimer(500);
 }
 
 void LauncherComponent::hideLaunchSpinner() {
   DBG("Hide launch spinner");
-  launchSpinnerTimer.stopTimer();
   launchSpinner->setVisible(false);
 }
 
