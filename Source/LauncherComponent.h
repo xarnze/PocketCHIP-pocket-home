@@ -51,7 +51,9 @@ public:
     BatteryMonitor batteryMonitor;
     ScopedPointer<LauncherBarComponent> botButtons;
     ScopedPointer<LauncherBarComponent> topButtons;
-    ScopedPointer<ImageComponent> launchSpinner;
+    ScopedPointer<Component> launchSpinner;
+    ScopedPointer<ImageComponent> launchSpinnerBackground;
+    ScopedPointer<ImageComponent> launchSpinnerImage;
     ScopedPointer<ImageComponent> focusButtonPopup;
   
     Array<Image> launchSpinnerImages;

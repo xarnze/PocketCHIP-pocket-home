@@ -11,7 +11,7 @@
 
 void LaunchSpinnerTimer::timerCallback() {
   if (launcherComponent) {
-    auto lsp = launcherComponent->launchSpinner.get();
+    auto lsp = launcherComponent->launchSpinnerImage.get();
     const auto& lspImg = launcherComponent->launchSpinnerImages;
     
     // change image
@@ -225,9 +225,18 @@ clock(nullptr), labelip("ip", "")
     launchSpinnerImages.add(image);
   }
   
-  launchSpinner = new ImageComponent();
-  launchSpinner->setImage(launchSpinnerImages[0]);
-  launchSpinner->setInterceptsMouseClicks(false, false);
+  launchSpinner = new Component();
+
+  launchSpinnerBackground = new ImageComponent();
+  Image launchSpinnerBackgroundImage(Image::ARGB, 1, 1, true);
+  launchSpinnerBackgroundImage.setPixelAt(0, 0, Colour((uint8)254, 255, 255, (uint8)201));
+  launchSpinnerBackground->setImage(launchSpinnerBackgroundImage, RectanglePlacement::stretchToFit);
+  launchSpinner->addAndMakeVisible(launchSpinnerBackground);
+
+  launchSpinnerImage = new ImageComponent();
+  launchSpinnerImage->setImage(launchSpinnerImages[0], RectanglePlacement::centred);
+  launchSpinner->addAndMakeVisible(launchSpinnerImage);
+
   addChildComponent(launchSpinner);
   
   focusButtonPopup = new ImageComponent("Focus Button Popup");
@@ -337,7 +346,16 @@ void LauncherComponent::resized() {
                              barSize);
   pageStack->setBounds(bounds.getX() + barSize, bounds.getY(), bounds.getWidth() - 2*barSize,
                        bounds.getHeight());
+
   launchSpinner->setBounds(0, 0, bounds.getWidth(), bounds.getHeight());
+  launchSpinnerBackground->setBounds(0, 0, bounds.getWidth(), bounds.getHeight());
+  int spinnerSize = bounds.getHeight() / 10;
+  launchSpinnerImage->setBounds(
+    (bounds.getWidth() - spinnerSize) / 2,
+    (bounds.getHeight() - spinnerSize) / 2,
+    spinnerSize,
+    spinnerSize
+  );
   
   batteryLabel->setBounds(bounds.getX()+40, bounds.getY(), 50, 50);
   
