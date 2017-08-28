@@ -9,26 +9,6 @@
 #include <math.h>
 #include <algorithm>
 
-void LaunchSpinnerTimer::timerCallback() {
-  if (launcherComponent) {
-    auto lsp = launcherComponent->launchSpinner.get();
-    const auto& lspImg = launcherComponent->launchSpinnerImages;
-    
-    // change image
-    i++;
-    if (i == lspImg.size()) { i = 0; }
-    lsp->setImage(lspImg[i]);
-    
-    // check timeout
-    t += getTimerInterval();
-    if (t > timeout) {
-      t = 0;
-      lsp->setVisible(false);
-      stopTimer();
-    }
-  }
-}
-
 void BatteryIconTimer::timerCallback() {
   
   // get current battery status from the battery monitor thread
@@ -218,16 +198,7 @@ clock(nullptr), labelip("ip", "")
     batteryIconChargingImages.add(image);
   }
 
-  launchSpinnerTimer.launcherComponent = this;
-  Array<String> spinnerImgPaths{"wait0.png","wait1.png","wait2.png","wait3.png","wait4.png","wait5.png","wait6.png","wait7.png"};
-  for(auto& path : spinnerImgPaths) {
-    auto image = createImageFromFile(assetFile(path));
-    launchSpinnerImages.add(image);
-  }
-  
-  launchSpinner = new ImageComponent();
-  launchSpinner->setImage(launchSpinnerImages[0]);
-  launchSpinner->setInterceptsMouseClicks(false, false);
+  launchSpinner = new OverlaySpinner();
   addChildComponent(launchSpinner);
   
   focusButtonPopup = new ImageComponent("Focus Button Popup");
@@ -337,6 +308,7 @@ void LauncherComponent::resized() {
                              barSize);
   pageStack->setBounds(bounds.getX() + barSize, bounds.getY(), bounds.getWidth() - 2*barSize,
                        bounds.getHeight());
+
   launchSpinner->setBounds(0, 0, bounds.getWidth(), bounds.getHeight());
   
   batteryLabel->setBounds(bounds.getX()+40, bounds.getY(), 50, 50);
@@ -391,12 +363,10 @@ void LauncherComponent::addIcon(const String& name, const String& path, const St
 void LauncherComponent::showLaunchSpinner() {
   DBG("Show launch spinner");
   launchSpinner->setVisible(true);
-  launchSpinnerTimer.startTimer(500);
 }
 
 void LauncherComponent::hideLaunchSpinner() {
   DBG("Hide launch spinner");
-  launchSpinnerTimer.stopTimer();
   launchSpinner->setVisible(false);
 }
 

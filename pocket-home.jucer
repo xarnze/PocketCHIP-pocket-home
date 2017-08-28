@@ -12,6 +12,10 @@
       <FILE id="e8kBas" name="wifi.json" compile="0" resource="1" file="assets/wifi.json"/>
     </GROUP>
     <GROUP id="{4593A345-C350-960A-058D-B48F8240AA1D}" name="Source">
+      <FILE id="sPYoCU" name="OverlaySpinner.cpp" compile="1" resource="0"
+            file="Source/OverlaySpinner.cpp"/>
+      <FILE id="DZZeul" name="OverlaySpinner.h" compile="0" resource="0"
+            file="Source/OverlaySpinner.h"/>
       <FILE id="Oo8gXi" name="AdvancedSettingsPage.cpp" compile="1" resource="0"
             file="Source/AdvancedSettingsPage.cpp"/>
       <FILE id="WN9Xea" name="AdvancedSettingsPage.h" compile="0" resource="0"

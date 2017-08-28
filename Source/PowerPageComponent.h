@@ -2,20 +2,12 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+#include "OverlaySpinner.h"
 #include "PowerPageComponent.h"
 #include "SwitchComponent.h"
 #include "PageStackComponent.h"
 
-class PowerPageComponent;
 class LoginPage;
-
-class PowerSpinnerTimer : public Timer {
-public:
-    PowerSpinnerTimer() {};
-    void timerCallback() override;
-    PowerPageComponent* powerComponent;
-    int i = 0;
-};
 
 class PowerPageComponent : public Component, private Button::Listener {
 public:
@@ -32,9 +24,8 @@ public:
     ScopedPointer<Component> mainPage;
     ScopedPointer<ImageComponent> powerSpinner;
     ScopedPointer<AlertWindow> updateWindow;
-    
-    PowerSpinnerTimer powerSpinnerTimer;
-    Array<Image> launchSpinnerImages;
+    ScopedPointer<OverlaySpinner> overlaySpinner;
+
     HashMap<String, Component *> pagesByName;
   
   String buildName;
