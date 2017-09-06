@@ -106,7 +106,7 @@ void AppListComponent::resized() {
   auto gridWidth = b.getWidth() - (2.0*btnHeight);
   auto gridHeight = b.getHeight() - (2.0*btnHeight);
   grid->setSize(gridWidth, gridHeight);
-  grid->setBoundsToFit(b.getX(), b.getY(), b.getWidth(), b.getHeight(), Justification::centred, true);
+  grid->setBoundsToFit(b.getX()-50, b.getY(), b.getWidth(), b.getHeight(), Justification::centred, true);
   
 }
 
