@@ -33,19 +33,11 @@ private:
   ScopedPointer<ImageButton> backButton;
   //Background color
   Colour bg_color;
-  //Does the home have a password ?
-  bool has_password;
-  bool has_file;
-  //Current hashed password
-  String cur_hashed;
-  
+ 
+  void setLocations();
   void clearAllFields();
-  void loadPassword();
-  bool isPasswordCorrect(const String&);
   void savePassword();
   void deletePassword();
-  void createIfNotExists();
-  void setLocations();
   bool passwordIdentical();
   
   //Text field for the root password

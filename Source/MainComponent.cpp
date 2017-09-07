@@ -129,13 +129,7 @@ void LoginPage::textFocus(){
 }
 
 void LoginPage::buttonClicked(Button *button){
-  String pass_tmp = cur_password->getText();
-  String hashed = SettingsPageLogin::hashString(pass_tmp);
-  if(hashed_password=="none" || hashed == hashed_password){
-      cur_password->setText("");
-      functiontoexecute();
-  }
-  else displayError();
+  functiontoexecute();
 }
 
 void LoginPage::textEditorReturnKeyPressed(TextEditor& te){

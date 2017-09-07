@@ -6,7 +6,7 @@ cur_label("CurLabel", "Current password"), cur_password("Current",0x2022),
 new_label("NewLabel", "New password"), new_password("New", 0x2022),
 ret_label("ConfLabel", "Retype password"), ret_password("Confirmation", 0x2022),
 bg_color(0xffd23c6d), title("Title", "Change your password"),
-deletemode(false), has_file(false), has_password(false)
+deletemode(false)
 {
   //Title
   title.setFont(Font(25.f));
@@ -15,8 +15,6 @@ deletemode(false), has_file(false), has_password(false)
   backButton->addListener(this);
   backButton->setAlwaysOnTop(true);
   addAndMakeVisible(backButton);
-  //Load the password if existing
-  loadPassword();
   apply.setButtonText("Apply");
   apply.addListener(this);
   //Setting the location in the view
@@ -39,19 +37,21 @@ SettingsPageLogin::~SettingsPageLogin(){ }
 void SettingsPageLogin::paint(Graphics &g) {
     auto bounds = getLocalBounds();
     g.fillAll(bg_color);
+    setLocations();
 }
 
 void SettingsPageLogin::setLocations(){
+  auto bounds = getLocalBounds();
   //Setting the position of the back button
-  backButton->setBounds(0, 0, 60, 272);
+  backButton->setBounds(0, 0, 60, bounds.getHeight());
   
   int x = 90;
   int edit_x = 190;
-  int edit_width = 200;
+  int edit_width = bounds.getWidth() - 210;
   int y = 50;
   int offset = 45;
 
-  title.setBounds(130, 0, 300, 50);
+  title.setBounds(130, 0, bounds.getWidth() - 100, 50);
   
   root_label.setBounds(x, y, 100, 30);
   root_password.setBounds(edit_x, y, edit_width , 30);
@@ -69,10 +69,12 @@ void SettingsPageLogin::setLocations(){
   ret_password.setBounds(edit_x, y, edit_width , 30);
   y += offset;  
   
-  apply.setBounds(x, y, 300, 30);
+  apply.setBounds(x, y, bounds.getWidth() - 110, 30);
 }
 
 void SettingsPageLogin::switchToModify(){
+  root_label.setVisible(false);
+  root_password.setVisible(false);
   if(new_password.isVisible()) return;
   new_label.setVisible(true);
   new_password.setVisible(true);
@@ -83,6 +85,8 @@ void SettingsPageLogin::switchToModify(){
 }
 
 void SettingsPageLogin::switchToRemove(){
+  root_label.setVisible(true);
+  root_password.setVisible(true);
   if(!new_password.isVisible()) return;
   new_label.setVisible(false);
   new_password.setVisible(false);
@@ -90,69 +94,6 @@ void SettingsPageLogin::switchToRemove(){
   ret_password.setVisible(false);
   title.setText("Remove your password", dontSendNotification);
   deletemode = true;  
-}
-
-void SettingsPageLogin::loadPassword(){
-  char* home_str = getenv("HOME");
-  String home(home_str);
-  File passwd(home+"/.pocket-home/.passwd/passwd");
-  if(passwd.exists()){
-    String content = passwd.loadFileAsString();
-    content = content.removeCharacters("\n");
-    if(content==String("none")){
-      has_file = true;
-      has_password = false;
-    }
-    else{
-      has_file = true;
-      has_password = true;
-      cur_hashed = content;
-    }
-  }
-  else createIfNotExists();
-}
-
-bool SettingsPageLogin::isPasswordCorrect(const String& pass){
-  return !has_password || (pass==cur_hashed);
-}
-
-void SettingsPageLogin::createIfNotExists(){
-  /* Let's create the folder containing the password, posix way */
-  if(!has_file){
-    char* home_str = getenv("HOME");
-    String folder(home_str);
-    folder += String("/.pocket-home/.passwd");
-    String file(folder);
-    file += String("/passwd");
-    int res = mkdir(folder.toRawUTF8(), 0755);
-    if(res) perror("Error creating ~/.pocket-home/.passwd folder");
-    int opts = O_CREAT | O_TRUNC | O_WRONLY;
-    int fd = open(file.toRawUTF8(), opts, 0644);
-    if(fd<0){
-      perror("Error creating ~/.pocket-home/.passwd/passwd file");
-      return;
-    }
-    res = write(fd, "none\n", 5);
-    if(res != 5) fprintf(stderr, "Couldn't write correctly the password\n");
-    close(fd);
-    
-    has_file = true;
-    has_password = false;
-  }
-}
-
-String SettingsPageLogin::hashString(const String& string){
-  const unsigned char* str = (unsigned char*) string.toStdString().c_str();
-  unsigned char hash[21];
-  int i;
-  char hashed[41];
-  SHA1(str, string.length(), hash);
-  //The Sha1sum of the string is now stored in the hash array (as a byte array)
-  //So let's convert the byte array into a C string (char*)
-  for(i = 0; i < 20; i++)
-    sprintf(hashed+(i*2), "%02x", hash[i]);
-  hashed[40] = 0;
-  return String(hashed);
 }
 
 bool SettingsPageLogin::passwordIdentical(){
@@ -166,23 +107,12 @@ bool SettingsPageLogin::passwordIdentical(){
   return true;
 }
 
-bool SettingsPageLogin::hasPassword(){
-  //We need to often read the file in case it's manually modified
-  loadPassword();
-  return has_password;
-}
-
 void SettingsPageLogin::deletePassword(){
   String typed_root = root_password.getText();
-  String typed_current = cur_password.getText();
-  char* home_str = getenv("HOME");
-  String home(home_str);
-  String passwd_path = home+"/.pocket-home/.passwd/passwd";
-  String user(getlogin());
   String root_pass = root_password.getText();
   String cmd_passwd = "echo \""+root_pass+"\" | "; 
   //Changing the owner of the password file (to be able to write inside)
-  String command1 = cmd_passwd+"sudo -kS chown "+user+":"+user+" "+passwd_path;
+  String command1 = cmd_passwd+"sudo -kS passwd -d chip";
   int returned = system(command1.toRawUTF8());
   if(returned != 0){
     //An error occured !
@@ -192,82 +122,37 @@ void SettingsPageLogin::deletePassword(){
                                   "Ok");
     return;
   }
-  //Write inside the file
-  int fd = open(passwd_path.toRawUTF8(), O_WRONLY | O_TRUNC);
-  if(fd < 0)
-    perror("File couldn't be opened");
-  int wr = write(fd, "none\n", 5);
-  if(wr != 5)
-    perror("Couldn't write in the file");
-  close(fd);
-  //After writing, we put back the owner (root)
-  String command2 = cmd_passwd+"sudo -kS chown root:root "+passwd_path;
-  returned = system(command2.toRawUTF8());
   AlertWindow::showMessageBoxAsync(AlertWindow::AlertIconType::InfoIcon,
                                   "Success", 
                                   "Password removed !",
                                   "Ok");
-  has_password = false;
 }
 
 void SettingsPageLogin::savePassword(){
   if(!passwordIdentical()) return;
-  loadPassword();
-  String typed_root = root_password.getText();
   String typed_current = cur_password.getText();
   String typed_new = new_password.getText();
   
-  if(has_password){
-    String hashed_typed = hashString(typed_current);
-    if(hashed_typed != cur_hashed){
-      AlertWindow::showMessageBoxAsync(AlertWindow::AlertIconType::WarningIcon,
-                                  "Wrong password",
-                                  "Your current password is wrong, try again",
-                                  "Ok");
-    
-      return;
-    }
-  }
-  
-  String hashed_new = hashString(typed_new);
-  char* home_str = getenv("HOME");
-  String home(home_str);
-  String passwd_folder = home+"/.pocket-home/.passwd";
-  String passwd_path = home+"/.pocket-home/.passwd/passwd";
   String user(getlogin());
-  String root_pass = root_password.getText();
-  String cmd_passwd = "echo \""+root_pass+"\" |"; 
+  String cmd_passwd = "echo \""+typed_current+"\n"+typed_new+"\n"+typed_new+"\n\" | "; 
   //Changing the owner of the password file (to be able to write inside)
-  String command1 = cmd_passwd+"sudo -kS chown "+user+":"+user+" "+passwd_path;
+  String command1 = cmd_passwd+"passwd "+user;
   int returned = system(command1.toRawUTF8());
   if(returned != 0){
     //An error occured !
     AlertWindow::showMessageBoxAsync(AlertWindow::AlertIconType::WarningIcon,
-                                  "Wrong password", 
-                                  "Impossible to modify the password, check your root password",
+                                  "Unable to change password",
+				  command1,
+                                  //"Please check your current password",
                                   "Ok");
     return;
   }
-  //Write inside the file
-  int fd = open(passwd_path.toRawUTF8(), O_WRONLY | O_TRUNC);
-  if(fd < 0)
-    perror("File couldn't be opened");
-  int wr = write(fd, hashed_new.toRawUTF8(), hashed_new.length());
-  if(wr != hashed_new.length())
-    perror("Couldn't write in the file");
-  close(fd);
-  //After writing, we put back the owner (root)
-  String command2 = cmd_passwd+"sudo -kS chown root:root "+passwd_path;
-  String command3 = cmd_passwd+"sudo -kS chown root:root "+passwd_folder;
-  returned = system(command2.toRawUTF8());
-  returned = system(command3.toRawUTF8());
   AlertWindow::showMessageBoxAsync(AlertWindow::AlertIconType::InfoIcon,
                                   "Success", 
                                   "Password changed !",
                                   "Ok");
-  cur_hashed = hashed_new;
-  has_password = true;
-  has_file = true;
+    getMainStack().popPage(PageStackComponent::kTransitionTranslateHorizontal);
+    clearAllFields();
 }
 
 void SettingsPageLogin::clearAllFields(){

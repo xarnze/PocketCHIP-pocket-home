@@ -104,13 +104,6 @@ void AdvancedSettingsPage::deleteIcon(String name, String shell){
   ppc->deleteIcon(name, shell);
 }
 
-void AdvancedSettingsPage::displayNoPassword(){
-AlertWindow::showMessageBoxAsync(AlertWindow::AlertIconType::WarningIcon,
-                                  "Error", 
-                                  "No password is set, cannot remove",
-                                  "Ok");
-}
-
 void AdvancedSettingsPage::buttonClicked(Button* button){
   if (button == backButton)
     getMainStack().popPage(PageStackComponent::kTransitionTranslateHorizontal);
@@ -119,11 +112,8 @@ void AdvancedSettingsPage::buttonClicked(Button* button){
     getMainStack().pushPage(spl, PageStackComponent::kTransitionTranslateHorizontal);
   }
   else if(button == &removeLogin){
-    if(spl->hasPassword()){
       spl->switchToRemove();
       getMainStack().pushPage(spl, PageStackComponent::kTransitionTranslateHorizontal);
-    }
-    else displayNoPassword();
   }
   else if(button == &personalizeButton)
     getMainStack().pushPage(ppc, PageStackComponent::kTransitionTranslateHorizontal);
