@@ -76,6 +76,7 @@ void SettingsPageLogin::switchToModify(){
   root_label.setVisible(false);
   root_password.setVisible(false);
   if(new_password.isVisible()) return;
+  cur_password.setVisible(true);
   new_label.setVisible(true);
   new_password.setVisible(true);
   ret_label.setVisible(true);
@@ -88,6 +89,7 @@ void SettingsPageLogin::switchToRemove(){
   root_label.setVisible(true);
   root_password.setVisible(true);
   if(!new_password.isVisible()) return;
+  cur_password.setVisible(false);
   new_label.setVisible(false);
   new_password.setVisible(false);
   ret_label.setVisible(false);
