@@ -3,11 +3,13 @@
 #include "Main.h"
 #include "Utils.h"
 #include "PokeLookAndFeel.h"
+#include <sys/utsname.h>
 
 #include <numeric>
 
 unsigned char PowerPageComponent::rev_number = 9;
 unsigned char PowerPageComponent::bug_number = 0;
+struct utsname unameData;
 
 PowerPageComponent::PowerPageComponent() {
   bgColor = Colours::black;
@@ -55,9 +57,15 @@ PowerPageComponent::PowerPageComponent() {
   if (releaseFile.exists()) {
     auto fileStr = releaseFile.loadFileAsString();
     auto lines = split(fileStr, "\n");
-    if (lines.size() < 9)
+    if (lines.size() < 9){
       DBG(__func__ << ": No release information in /etc/os-release");
-    else {
+      uname(&unameData);
+      buildName += unameData.sysname;
+      buildName += unameData.nodename;
+      buildName += unameData.release;
+      buildName += unameData.version;
+      buildName += unameData.machine;
+    }else {
       auto releaseKv = split(lines[8],"=");
       std::vector<String> releaseV(releaseKv.begin()+1,releaseKv.end());
       for (const auto& val : releaseV) {
