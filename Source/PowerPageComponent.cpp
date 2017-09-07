@@ -19,10 +19,6 @@ PowerPageComponent::PowerPageComponent() {
   
   felPage = new PowerFelPageComponent();
   
-  //Setting up the lockscreen
-  auto lambda = [this](){ this->hideLockscreen(); };
-  lockscreen = new LoginPage(lambda);
-  
   // create back button
   backButton = createImageButton(
       "Back", createImageFromFile(assetFile("nextIcon.png")));
@@ -101,12 +97,6 @@ PowerPageComponent::PowerPageComponent() {
 }
 
 PowerPageComponent::~PowerPageComponent() {}
-
-void PowerPageComponent::hideLockscreen(){
-    removeChildComponent(lockscreen);
-    //Let's go back to the homescreen
-    getMainStack().popPage(PageStackComponent::kTransitionNone);    
-}
 
 void PowerPageComponent::paint(Graphics &g) {
     auto bounds = getLocalBounds();

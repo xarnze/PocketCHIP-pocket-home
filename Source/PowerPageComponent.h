@@ -7,8 +7,6 @@
 #include "SwitchComponent.h"
 #include "PageStackComponent.h"
 
-class LoginPage;
-
 class PowerPageComponent : public Component, private Button::Listener {
 public:
 
@@ -53,8 +51,5 @@ private:
   Image bgImage;
   String bgImagePath;
   ChildProcess child;
-
-  //Lockscreen to display when the screen goes sleeping
-  ScopedPointer<LoginPage> lockscreen;
 };
 
